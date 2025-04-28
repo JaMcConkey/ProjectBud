@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://cblisy71n4a55"]
+
+[ext_resource type="Script" uid="uid://cv2qb3urkyeuy" path="res://main_menu.gd" id="1_06t4h"]
+
+[node name="MainMenu" type="Node"]
+script = ExtResource("1_06t4h")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = 27.0
+offset_right = 4.0
+offset_bottom = 83.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer"]
+layout_mode = 2
+
+[node name="player" type="Button" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "PLAY"
+
+[node name="settings" type="Button" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="quit" type="Button" parent="Control/CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "QUIT"

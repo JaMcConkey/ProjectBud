@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2tyer23pgqbs"]
+
+[ext_resource type="Script" uid="uid://bybdv1wnqll5h" path="res://Hubs/hub_action_button.gd" id="1_ob7bj"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pixk4"]
+size = Vector2(24, 24)
+
+[node name="Button" type="Button"]
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = SubResource("PlaceholderTexture2D_pixk4")
+script = ExtResource("1_ob7bj")

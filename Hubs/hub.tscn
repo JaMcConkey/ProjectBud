@@ -1,0 +1,94 @@
+[gd_scene load_steps=7 format=3 uid="uid://dxlqwue3i8yg"]
+
+[ext_resource type="Script" uid="uid://cnb60yyc0nem1" path="res://Battle/hub.gd" id="1_cqvac"]
+[ext_resource type="Script" uid="uid://cv0wdnr1y75aa" path="res://Battle/hub_collider.gd" id="3_04o0g"]
+[ext_resource type="Texture2D" uid="uid://b1t5rc0skcvcc" path="res://Circle.png" id="3_cqvac"]
+[ext_resource type="PackedScene" uid="uid://d2tyer23pgqbs" path="res://Hubs/hub_action_button.tscn" id="4_pixk4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1sfe8"]
+radius = 29.14
+
+[sub_resource type="LabelSettings" id="LabelSettings_cqvac"]
+font_color = Color(0, 0, 0, 1)
+outline_size = 2
+shadow_size = 0
+
+[node name="Hub" type="Node2D" node_paths=PackedStringArray("action_holder", "action_h_box")]
+script = ExtResource("1_cqvac")
+action_holder = NodePath("Control/Actions")
+action_h_box = NodePath("Control/Actions/HBoxContainer")
+action_button_scene = ExtResource("4_pixk4")
+
+[node name="temp_highlight" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 1, 0.054902, 1)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("3_cqvac")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.113, 0.113)
+texture = ExtResource("3_cqvac")
+
+[node name="HubCollider" type="Area2D" parent="."]
+script = ExtResource("3_04o0g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HubCollider"]
+shape = SubResource("CircleShape2D_1sfe8")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "gfd"
+label_settings = SubResource("LabelSettings_cqvac")
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 162
+
+[node name="Actions" type="Control" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = 30.0
+offset_right = 20.0
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Actions"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" parent="Control/Actions/HBoxContainer" instance=ExtResource("4_pixk4")]
+layout_mode = 2
+
+[connection signal="mouse_entered" from="HubCollider" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="HubCollider" to="." method="_on_area_2d_mouse_exited"]

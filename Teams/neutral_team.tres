@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Team" load_steps=2 format=3 uid="uid://dbmxnkjgqst7c"]
+
+[ext_resource type="Script" uid="uid://bu8bjng7hqwhs" path="res://team.gd" id="1_h7l5f"]
+
+[resource]
+script = ExtResource("1_h7l5f")
+team_id = 0
+team_name = "Neutral"
+is_ai = false
+team_color = Color(0.329158, 0.329158, 0.329158, 1)
+metadata/_custom_type_script = "uid://bu8bjng7hqwhs"
