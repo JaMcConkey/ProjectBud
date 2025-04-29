@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://d2tyer23pgqbs"]
+[gd_scene load_steps=4 format=3 uid="uid://d2tyer23pgqbs"]
 
 [ext_resource type="Script" uid="uid://bybdv1wnqll5h" path="res://Hubs/hub_action_button.gd" id="1_ob7bj"]
+[ext_resource type="Texture2D" uid="uid://iogj2ge8rrst" path="res://icon.svg" id="2_omd22"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pixk4"]
 size = Vector2(24, 24)
@@ -10,3 +11,14 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 icon = SubResource("PlaceholderTexture2D_pixk4")
 script = ExtResource("1_ob7bj")
+
+[node name="active" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_omd22")
+expand_mode = 1

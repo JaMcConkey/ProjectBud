@@ -1,7 +1,7 @@
 extends Node
 class_name BattleController
 
-# Controllers / Managers
+#Controllers / MAnagers
 @export var battlefield : Battlefield
 @export var hub_controller : HubController
 @export var action_manager : ActionManager
@@ -11,19 +11,17 @@ var game_context : GameContext
 var _cur_mode : STATE
 @export var teams : Array[Team]
 
-# Selection info
+#Selection info
 var _selected_hub : Node = null
 var _hovered_hub : Node = null
-var _drag_source_hub : Node = null  # Hub we're dragging from
-var _drag_target_hub : Node = null   # Hub we're dragging to
-var _drag_in_progress : bool = false
-var _drag_start_position : Vector2
+var is_dragging : bool
+var _drag_threshold : float = 0.2
+var _drag_timer : float = 0
 
 enum STATE {
 	Idle,              
 	TargetSelection,   
-	HubSelected,
-	DragSelection      # Special state for drag-to-target
+	HubSelected        
 }
 
 func _ready() -> void:
@@ -34,15 +32,19 @@ func _ready() -> void:
 	action_manager.action_completed.connect(_action_ended)
 	action_manager.action_failed.connect(_action_ended)
 
+func _physics_process(delta: float) -> void:
+	if is_dragging:
+		_drag_timer += delta
+
 func start_battle():
 	hub_controller.setup_hub_controller(self)
 
 func _action_started(action : GameAction):
 	_set_mode(STATE.TargetSelection)
+	#NOTE Make sure to clear old action stuffs
 	_clear_selection()
 	if action is HubAction:
 		action.source_hub.select_node()
-		action.source_hub.highlight_action(action)  # Highlight the active action
 
 func _action_ended(action : GameAction):
 	_set_mode(STATE.Idle)
@@ -58,102 +60,83 @@ func _clear_selection():
 	if _selected_hub:
 		_selected_hub.deselect_node()
 		_selected_hub = null
-	if _drag_source_hub:
-		_drag_source_hub.end_drag()
-		_drag_source_hub = null
-	if _drag_target_hub:
-		_drag_target_hub = null
 	for hub in hub_controller.get_all_hubs():
 		hub.deselect_node()
-		hub.clear_action_highlight()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed('test'):
 		var sender = hub_controller.get_all_hubs().pick_random()
 		var rec = hub_controller.get_all_hubs().pick_random()
 		influence_Manager.send_influence(sender, rec, 5)
-
-func _unhandled_input(event: InputEvent) -> void:
-	# Handle mouse button press
-	if event.is_action_pressed("LeftClick"):
-		var clicked_hub = _get_hub_under_mouse()
-		
-		if clicked_hub:
-			if _cur_mode == STATE.Idle:
-				_selected_hub = clicked_hub
-				_selected_hub.select_node()
-				_set_mode(STATE.HubSelected)
-				_drag_source_hub = clicked_hub
-				_drag_start_position = clicked_hub.get_global_mouse_position()
-				_drag_in_progress = false
-			
-			elif _cur_mode == STATE.TargetSelection:
-				action_manager.select_hub_target(clicked_hub)
-				_set_mode(STATE.Idle)
-			
-			elif _cur_mode == STATE.HubSelected:
-				if clicked_hub == _selected_hub:
-					_clear_selection()
-					_set_mode(STATE.Idle)
-				else:
-					_clear_selection()
-					_selected_hub = clicked_hub
-					_selected_hub.select_node()
-	
-	# Handle mouse button release
-	if event.is_action_released("LeftClick"):
-		if _drag_source_hub and _drag_in_progress:
-			var target_hub = _get_hub_under_mouse()
-			if target_hub and target_hub != _drag_source_hub:
-				# Execute the first action (usually send influence)
-				var actions = _drag_source_hub.get_hub_actions()
-				if actions.size() > 0:
-					var first_action = actions[0]
-					first_action.target_hub = target_hub
-					action_manager.start_action(first_action)
-			
-			_drag_source_hub.end_drag()
-			_drag_source_hub = null
-			_drag_in_progress = false
-			_set_mode(STATE.Idle)
-	
-	# Handle mouse motion for drag detection
-	if event is InputEventMouseMotion and _drag_source_hub and not _drag_in_progress:
-		if (_drag_source_hub.get_global_mouse_position() - _drag_start_position).length() > 10:  # Drag threshold
-			_drag_in_progress = true
-			_drag_source_hub.start_drag()
-			_set_mode(STATE.DragSelection)
-	
-	# Escape to cancel any mode
+	# Escape to idle for now
 	if event.is_action_pressed("ui_cancel"):
 		if _cur_mode != STATE.Idle:
 			action_manager.cancel_current_action()
 			_clear_selection()
 			_set_mode(STATE.Idle)
 
-func _get_hub_under_mouse() -> Node:
-	for hub in hub_controller.get_all_hubs():
-		if hub.mouse_over:
-			return hub
-	return null
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("LeftClick"):
+		_handle_left_click_down()
+	if event.is_action_released("LeftClick"):
+		_handle_left_click_up()
+func _handle_left_click_down():
+	is_dragging = true
+	match _cur_mode:
+		STATE.Idle:
+			_handle_idle_click()
+		STATE.TargetSelection:
+			_handle_target_selection_click()
+		STATE.HubSelected:
+			_handle_hub_selected_click()
+func _handle_left_click_up():
+	pass
+	#if event.is_action_pressed("RightClick"):
+		#match _cur_mode:
+			#STATE.TargetSelection:
+				#action_manager.cancel_current_action()
+				#_set_mode(STATE.Idle)
+			#STATE.HubSelected:
+				#_clear_selection()
+				#_set_mode(STATE.Idle)
+	#
 
 func _handle_idle_click():
-	var clicked_hub = _get_hub_under_mouse()
+	var clicked_hub = null
+	for hub in hub_controller.get_all_hubs():
+		if hub.mouse_over:
+			clicked_hub = hub
+			break
+	
 	if clicked_hub:
 		_selected_hub = clicked_hub
+		#NOTE: Selecting the node shows actions on the node
 		_selected_hub.select_node()
 		_set_mode(STATE.HubSelected)
+		
 
 func _handle_target_selection_click():
-	var clicked_hub = _get_hub_under_mouse()
+	var clicked_hub = null
+	for hub in hub_controller.get_all_hubs():
+		if hub.mouse_over:
+			clicked_hub = hub
+			break
+	
 	if clicked_hub:
 		action_manager.select_hub_target(clicked_hub)
 		_set_mode(STATE.Idle)
 	else:
+		#For now passing the clicked position this way, action manager will bug out
 		action_manager.select_position_target(get_viewport().get_mouse_position())
 
 func _handle_hub_selected_click():
-	var clicked_hub = _get_hub_under_mouse()
+	var clicked_hub = null
+	for hub in hub_controller.get_all_hubs():
+		if hub.mouse_over:
+			clicked_hub = hub
+			break
+	
+	# Clicking same hub deselects it for now-
 	if clicked_hub:
 		if clicked_hub == _selected_hub:
 			_clear_selection()

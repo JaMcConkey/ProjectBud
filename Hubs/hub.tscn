@@ -13,15 +13,11 @@ font_color = Color(0, 0, 0, 1)
 outline_size = 2
 shadow_size = 0
 
-[node name="Hub" type="Node2D" node_paths=PackedStringArray("action_holder", "action_h_box", "selection_highlight", "drag_highlight", "action_highlight", "influence_label")]
+[node name="Hub" type="Node2D" node_paths=PackedStringArray("action_holder", "action_h_box")]
 script = ExtResource("1_cqvac")
 action_holder = NodePath("Control/Actions")
 action_h_box = NodePath("Control/Actions/HBoxContainer")
 action_button_scene = ExtResource("4_pixk4")
-selection_highlight = NodePath("temp_highlight")
-drag_highlight = NodePath("temp_highlight")
-action_highlight = NodePath("Sprite2")
-influence_label = NodePath("Control/Label")
 
 [node name="temp_highlight" type="Sprite2D" parent="."]
 visible = false
@@ -34,6 +30,12 @@ scale = Vector2(0.113, 0.113)
 texture = ExtResource("3_cqvac")
 
 [node name="Sprite2" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.113, 0.113)
+texture = ExtResource("3_cqvac")
+
+[node name="Sprite3" type="Sprite2D" parent="."]
+visible = false
 scale = Vector2(0.113, 0.113)
 texture = ExtResource("3_cqvac")
 
