@@ -21,9 +21,6 @@ func send_influence(send_hub : Hub,target_hub : Hub,send_amount : int):
 		return
 	if can_send_influence(send_hub) and can_receive_influence(target_hub)\
 	and send_amount > 0:
-		#Attempt to take the influence - 
-		#if send_hub.take_blob_influence(send_amount): -Removed this, as the ACTION
-		# is currently removing the cost
 		var blob = influence_blob_scene.instantiate() as InfluenceBlob
 		#Add sending hub to ignore list
 		blob.ignore_hub(send_hub)

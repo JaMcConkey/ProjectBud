@@ -1,6 +1,8 @@
 extends Node2D
 class_name HubComponent
 
+signal on_any_hub_component_updated()
+
 var hub : Hub
 
 func init_component(p_hub : Hub):

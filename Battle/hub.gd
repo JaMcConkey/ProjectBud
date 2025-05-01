@@ -80,7 +80,9 @@ func add_hub_component(hub_component : HubComponent):
 	For now we want to add it WITHOUT the component having a parent
 	"""
 	hub_component.init_component(self)
+	hub_component.on_any_hub_component_updated.connect(_update_action_buttons)
 	add_child(hub_component)
+	_update_action_buttons()
 
 func set_team(team : Team):
 	team_owner = team
@@ -97,7 +99,11 @@ func get_hub_actions() -> Array[HubAction]:
 
 func show_actions():
 	action_holder.show()
-	_update_action_buttons()
+	for child in action_h_box.get_children():
+		if child.get_action() == battle_controller.action_manager.current_action:
+			child.active = true
+		else:
+			child.active = false
 func hide_actions():
 	action_holder.hide()
 
@@ -110,12 +116,12 @@ func _update_action_buttons():
 		if action_button is HubActionButton:
 			action_button.set_action(action)
 			action_button.hub_action_button_pressed.connect(action_button_pressed)
-			#action_button.pressed.connect(func(): battle_controller.action_manager.start_action(action))
 			action_h_box.add_child(action_button)
-			if battle_controller.action_manager.current_action == action:
-				action_button.active = true
+
 
 func action_button_pressed(button : HubActionButton):
-	battle_controller.action_manager.start_action(button.hub_action)
-	if battle_controller.action_manager.current_action == button.hub_action:
-		button.active = true
+	if button.get_action() == null:
+		push_error("No action assigned to button")
+		return
+	battle_controller.action_manager.start_action(button.get_action())
+	button.active = true
