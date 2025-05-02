@@ -60,6 +60,7 @@ grow_horizontal = 2
 script = ExtResource("7_jah81")
 
 [node name="BattlefieldCamera" type="Camera2D" parent="."]
+zoom = Vector2(1.495, 1.495)
 script = ExtResource("3_p74yl")
 
 [node name="BattleField" type="Node" parent="."]

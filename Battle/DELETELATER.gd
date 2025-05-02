@@ -15,3 +15,7 @@ func _process(delta: float) -> void:
 			#$".".text = "DragSelection"
 		_:
 			$".".text = "???????"
+	if bc._selected_hub:
+		for comp in bc._selected_hub.get_hub_components():
+			if comp is InfluenceSender:
+				$".".text += "SEND VAL  = " + str(comp.get_send_value())

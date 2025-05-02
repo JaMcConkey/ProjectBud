@@ -111,14 +111,15 @@ func hide_actions():
 func _update_action_buttons():
 	for child in action_h_box.get_children():
 		child.queue_free()
-	for action in get_hub_actions():
-		var action_button = action_button_scene.instantiate()
-		if action_button is HubActionButton:
-			action_button.set_action(action)
-			action_button.hub_action_button_pressed.connect(action_button_pressed)
-			action_h_box.add_child(action_button)
+	for child in get_hub_components():
+		for action in child.get_all_actions():
+			var action_button = action_button_scene.instantiate()
+			if action_button is HubActionButton:
+				action_button.set_action(action,child)
+				action_button.hub_action_button_pressed.connect(action_button_pressed)
+				action_h_box.add_child(action_button)
 
-
+		
 func action_button_pressed(button : HubActionButton):
 	if button.get_action() == null:
 		push_error("No action assigned to button")

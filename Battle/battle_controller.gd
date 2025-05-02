@@ -11,9 +11,13 @@ var game_context : GameContext
 var _cur_mode : STATE
 @export var teams : Array[Team]
 
+var send_value : int :
+	set(v):
+		send_value = abs(v)
+
 #Selection info
-var _selected_hub : Node = null
-var _hovered_hub : Node = null
+var _selected_hub : Hub = null
+var _hovered_hub : Hub = null
 var is_dragging : bool
 var _drag_threshold : float = 0.2
 var _drag_timer : float = 0
@@ -45,6 +49,7 @@ func _action_started(action : GameAction):
 	_clear_selection()
 	if action is HubAction:
 		action.source_hub.select_node()
+		_selected_hub = action.source_hub
 
 func _action_ended(action : GameAction):
 	_set_mode(STATE.Idle)
@@ -80,6 +85,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		_handle_left_click_down()
 	if event.is_action_released("LeftClick"):
 		_handle_left_click_up()
+	if event.is_action_pressed("ScrollDown"):
+		if _selected_hub:
+			for comp in _selected_hub.get_hub_components():
+				if comp is InfluenceSender:
+					comp.set_send_value(comp.get_send_value() - 1)
+	if event.is_action_pressed("ScrollUp"):
+		if _selected_hub:
+			for comp in _selected_hub.get_hub_components():
+				if comp is InfluenceSender:
+					comp.set_send_value(comp.get_send_value() + 1)
 func _handle_left_click_down():
 	is_dragging = true
 	match _cur_mode:

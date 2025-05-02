@@ -30,6 +30,8 @@ func place_hub(pos : Vector2):
 		hub.init_hub(_battle_controller)
 		var inf_s = InfluenceSender.new()
 		var inf_r = InfluenceReceiver.new()
+		var inf_p = InfluenceProducer.new()
+		hub.add_hub_component(inf_p)
 		hub.add_hub_component(inf_s)
 		hub.add_hub_component(inf_r)
 		hub.apply_influence(50,Team.new())

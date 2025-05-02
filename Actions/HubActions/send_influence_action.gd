@@ -10,10 +10,16 @@ var send_percent : float :
 		send_percent = v
 
 func _init(source: Hub, amount: int):
-	super("Send Influence", null, "influence", source, true, amount)
-	influence_amount = amount
-	cost = influence_amount
+	super("Send Influence", null, "send_influence", source, true, amount)
+	set_send_amount(amount)
 	requires_target = true
+
+func set_send_amount(val : int):
+	"""
+	By Default, COST and SEND amount will be equal
+	"""
+	influence_amount = val
+	cost = val
 
 func execute() -> bool:
 	if not super.execute():
