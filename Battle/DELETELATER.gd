@@ -1,7 +1,7 @@
 extends Label
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var bc : BattleController
 	bc = $"../.."
 	match bc._cur_mode:
@@ -15,7 +15,7 @@ func _process(delta: float) -> void:
 			#$".".text = "DragSelection"
 		_:
 			$".".text = "???????"
-	if bc._selected_hub:
-		for comp in bc._selected_hub.get_hub_components():
+	if bc.selected_hub:
+		for comp in bc.selected_hub.get_hub_components():
 			if comp is InfluenceSender:
 				$".".text += "SEND VAL  = " + str(comp.get_send_value())

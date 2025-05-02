@@ -2,7 +2,7 @@ extends HubComponent
 class_name InfluenceReceiver
 
 
-func receive_influence(amount : int):
+func receive_influence(_amount : int):
 	amount += 0
 	"""
 	This will NOT increase the influence, the manager handles that. This will

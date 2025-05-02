@@ -16,7 +16,7 @@ var send_value : int :
 		send_value = abs(v)
 
 #Selection info
-var _selected_hub : Hub = null
+var selected_hub : Hub = null
 var _hovered_hub : Hub = null
 var is_dragging : bool
 var _drag_threshold : float = 0.2
@@ -49,9 +49,9 @@ func _action_started(action : GameAction):
 	_clear_selection()
 	if action is HubAction:
 		action.source_hub.select_node()
-		_selected_hub = action.source_hub
+		selected_hub = action.source_hub
 
-func _action_ended(action : GameAction):
+func _action_ended(_action : GameAction):
 	_set_mode(STATE.Idle)
 	_clear_selection()
 
@@ -62,9 +62,9 @@ func _set_mode(state : STATE):
 	_cur_mode = state
 
 func _clear_selection():
-	if _selected_hub:
-		_selected_hub.deselect_node()
-		_selected_hub = null
+	if selected_hub:
+		selected_hub.deselect_node()
+		selected_hub = null
 	for hub in hub_controller.get_all_hubs():
 		hub.deselect_node()
 
@@ -81,18 +81,19 @@ func _input(event: InputEvent) -> void:
 			_set_mode(STATE.Idle)
 
 func _unhandled_input(event: InputEvent) -> void:
+	#doing down and released incase I decide to add dragging
 	if event.is_action_pressed("LeftClick"):
 		_handle_left_click_down()
 	if event.is_action_released("LeftClick"):
 		_handle_left_click_up()
 	if event.is_action_pressed("ScrollDown"):
-		if _selected_hub:
-			for comp in _selected_hub.get_hub_components():
+		if selected_hub:
+			for comp in selected_hub.get_hub_components():
 				if comp is InfluenceSender:
 					comp.set_send_value(comp.get_send_value() - 1)
 	if event.is_action_pressed("ScrollUp"):
-		if _selected_hub:
-			for comp in _selected_hub.get_hub_components():
+		if selected_hub:
+			for comp in selected_hub.get_hub_components():
 				if comp is InfluenceSender:
 					comp.set_send_value(comp.get_send_value() + 1)
 func _handle_left_click_down():
@@ -106,15 +107,7 @@ func _handle_left_click_down():
 			_handle_hub_selected_click()
 func _handle_left_click_up():
 	pass
-	#if event.is_action_pressed("RightClick"):
-		#match _cur_mode:
-			#STATE.TargetSelection:
-				#action_manager.cancel_current_action()
-				#_set_mode(STATE.Idle)
-			#STATE.HubSelected:
-				#_clear_selection()
-				#_set_mode(STATE.Idle)
-	#
+
 
 func _handle_idle_click():
 	var clicked_hub = null
@@ -124,9 +117,9 @@ func _handle_idle_click():
 			break
 	
 	if clicked_hub:
-		_selected_hub = clicked_hub
+		selected_hub = clicked_hub
 		#NOTE: Selecting the node shows actions on the node
-		_selected_hub.select_node()
+		selected_hub.select_node()
 		_set_mode(STATE.HubSelected)
 		
 
@@ -153,10 +146,10 @@ func _handle_hub_selected_click():
 	
 	# Clicking same hub deselects it for now-
 	if clicked_hub:
-		if clicked_hub == _selected_hub:
+		if clicked_hub == selected_hub:
 			_clear_selection()
 			_set_mode(STATE.Idle)
 		else:
 			_clear_selection()
-			_selected_hub = clicked_hub
-			_selected_hub.select_node()
+			selected_hub = clicked_hub
+			selected_hub.select_node()
