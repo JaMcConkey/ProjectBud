@@ -1,33 +1,40 @@
 extends Node2D
 class_name Hub
 
+signal hub_state_changed()
+signal hub_components_updated()
+
+@export var hub_ui : HubUI
+
 #Action Stuff
 @export var action_holder : Control
 @export var action_h_box : HBoxContainer
 @export var action_button_scene : PackedScene
 
 
+#Runtime stuff
 var mouse_over : bool 
 var selected : bool
+var components : Array[HubComponent]
+
+#Properties
 var team_owner : Team
 var _cur_influence : int :
 	set(v):
 		_cur_influence = v
-		$Control/Label.text = str(v)
+		hub_state_changed.emit()
 var max_influence : int = 60
 
-var components : Array[HubComponent]
 var battle_controller : BattleController
 
 
-func _ready() -> void:
+func init_hub(p_battle_controller : BattleController):
+	battle_controller = p_battle_controller
+	hub_ui.setup_hub_ui(self)
 	add_to_group("hubs")
 	for child in get_children():
 		if child is HubComponent:
 			add_hub_component(child)
-
-func init_hub(p_battle_controller : BattleController):
-	battle_controller = p_battle_controller
 
 func _on_area_2d_mouse_entered() -> void:
 	mouse_over = true
@@ -43,13 +50,13 @@ func _on_area_2d_mouse_exited() -> void:
 func select_node() -> Hub:
 	selected = true
 	$temp_highlight.show()
-	show_actions()
+	hub_ui.show_actions()
 	#If selected, we'll check for components that interact with it
 	
 	return self
 func deselect_node():
 	selected = false
-	hide_actions()
+	hub_ui.hide_actions()
 	$temp_highlight.hide()
 
 func get_current_influence() -> int:
@@ -80,49 +87,10 @@ func add_hub_component(hub_component : HubComponent):
 	For now we want to add it WITHOUT the component having a parent
 	"""
 	hub_component.init_component(self)
-	hub_component.on_any_hub_component_updated.connect(_update_action_buttons)
 	add_child(hub_component)
-	_update_action_buttons()
+	hub_components_updated.emit()
+
 
 func set_team(team : Team):
 	team_owner = team
 	$Sprite.modulate = team.team_color
-
-func get_hub_actions() -> Array[HubAction]:
-	#Filtering to only hub actions for now. Maybe change this?
-	var r_arr : Array[HubAction]
-	for hub_comp in get_hub_components():
-		for action in hub_comp.get_all_actions():
-			if action is HubAction:
-				r_arr.append(action)
-	return r_arr
-
-func show_actions():
-	action_holder.show()
-	for child in action_h_box.get_children():
-		if child.get_action() == battle_controller.action_manager.current_action:
-			child.active = true
-		else:
-			child.active = false
-func hide_actions():
-	action_holder.hide()
-
-
-func _update_action_buttons():
-	for child in action_h_box.get_children():
-		child.queue_free()
-	for child in get_hub_components():
-		for action in child.get_all_actions():
-			var action_button = action_button_scene.instantiate()
-			if action_button is HubActionButton:
-				action_button.set_action(action,child)
-				action_button.hub_action_button_pressed.connect(action_button_pressed)
-				action_h_box.add_child(action_button)
-
-		
-func action_button_pressed(button : HubActionButton):
-	if button.get_action() == null:
-		push_error("No action assigned to button")
-		return
-	battle_controller.action_manager.start_action(button.get_action())
-	button.active = true

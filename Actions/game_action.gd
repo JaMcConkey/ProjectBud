@@ -16,7 +16,15 @@ func _init(p_name: String, p_icon: Texture2D, p_type: String, p_requires_target:
 	requires_target = p_requires_target
 	cost = p_cost
 
+func can_start() -> bool:
+	"""Checks if an action can be started"""
+	return true
+
 func can_execute() -> bool:
+	"""
+	Checks if action meets ALL requirements to execute
+	(Including a target if needed)
+	"""
 	# Base check - subclasses will extend this
 	return true
 

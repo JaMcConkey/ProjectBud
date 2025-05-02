@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://fasff80qoufc"]
+[gd_scene load_steps=5 format=3 uid="uid://fasff80qoufc"]
 
 [ext_resource type="Script" uid="uid://bydaaafwms66t" path="res://Battle/influence_blob.gd" id="1_03jtj"]
 [ext_resource type="Texture2D" uid="uid://b1t5rc0skcvcc" path="res://Circle.png" id="2_a7m0b"]
@@ -6,10 +6,17 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_p74yl"]
 radius = 32.0
 
+[sub_resource type="LabelSettings" id="LabelSettings_a7m0b"]
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
 [node name="InfluenceBlob" type="Area2D" node_paths=PackedStringArray("inf_label", "tar_line")]
 script = ExtResource("1_03jtj")
 inf_label = NodePath("Label")
 tar_line = NodePath("TargetLine")
+
+[node name="TargetLine" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 55, 55)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.125, 0.125)
@@ -31,8 +38,6 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "15"
+label_settings = SubResource("LabelSettings_a7m0b")
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="TargetLine" type="Line2D" parent="."]
-points = PackedVector2Array(0, 0, 55, 55)
