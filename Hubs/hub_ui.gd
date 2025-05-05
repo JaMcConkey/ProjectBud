@@ -9,6 +9,7 @@ var hub : Hub
 var hub_action_buttons : Dictionary[HubComponent,HubActionButton] #String is action_type
 
 @export var influence_display_label : Label
+@export var health_ui : HubHealthUI
 
 var battle_controller : BattleController
 
@@ -17,7 +18,7 @@ func setup_hub_ui(p_hub : Hub):
 	battle_controller = hub.battle_controller
 	hub.hub_state_changed.connect(_update_hub_ui)
 	hub.hub_components_updated.connect(_update_hub_actions)
-
+	_update_hub_actions()
 func _update_hub_ui():
 	influence_display_label.text = str(hub.get_current_influence())
 func _update_hub_actions():
@@ -29,7 +30,7 @@ func _update_hub_actions():
 	for comp in hub_action_buttons:
 		if not comp in current_components:
 			components_to_remove.append(comp)
-	
+
 	for comp in components_to_remove:
 		var button = hub_action_buttons[comp]
 		button.queue_free()
@@ -38,7 +39,10 @@ func _update_hub_actions():
 	for comp in current_components:
 		if comp.get_action() and not hub_action_buttons.has(comp):
 			hub_action_buttons[comp] = _add_comp_button(comp)
-
+		if comp is HealthComponent:
+			health_ui.bind_health_component(comp)
+	
+	
 	for comp in hub_action_buttons:
 		if is_instance_valid(hub_action_buttons[comp]):
 			hub_action_buttons[comp].update_button_state()

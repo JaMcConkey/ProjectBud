@@ -16,6 +16,9 @@ signal hub_components_updated()
 var mouse_over : bool 
 var selected : bool
 var components : Array[HubComponent]
+var player_owned : bool :
+	get:
+		return team_owner == battle_controller.game_context.player_team
 
 #Properties
 var team_owner : Team

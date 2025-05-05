@@ -1,0 +1,115 @@
+[gd_scene load_steps=7 format=3 uid="uid://c3x8v2l4ay4fk"]
+
+[ext_resource type="Script" uid="uid://dnwjbg7hlbo4w" path="res://Hubs/hub_ui.gd" id="1_ak0c7"]
+[ext_resource type="PackedScene" uid="uid://d2tyer23pgqbs" path="res://Hubs/hub_action_button.tscn" id="2_1i22f"]
+[ext_resource type="Script" uid="uid://cwha0dqqhwrai" path="res://Hubs/hub_health_ui.gd" id="3_suuu7"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cqvac"]
+font_color = Color(0, 0, 0, 1)
+outline_size = 2
+shadow_size = 0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_04o0g"]
+bg_color = Color(0.86561, 0.164351, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ly8ps"]
+bg_color = Color(7.21961e-06, 0.88129, 0.14702, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[node name="HubUI" type="Control" node_paths=PackedStringArray("action_holder", "action_h_box", "influence_display_label", "health_ui")]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ak0c7")
+action_holder = NodePath("Actions")
+action_h_box = NodePath("Actions/HBoxContainer")
+action_button_scene = ExtResource("2_1i22f")
+influence_display_label = NodePath("Label")
+health_ui = NodePath("HubHealthUI")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "gfd"
+label_settings = SubResource("LabelSettings_cqvac")
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 162
+
+[node name="HubHealthUI" type="Control" parent="." node_paths=PackedStringArray("health_bar")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_suuu7")
+health_bar = NodePath("HealthBar")
+
+[node name="HealthBar" type="ProgressBar" parent="HubHealthUI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = -14.0
+grow_horizontal = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_04o0g")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ly8ps")
+value = 63.87
+show_percentage = false
+
+[node name="Actions" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = 30.0
+offset_right = 20.0
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Actions"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
