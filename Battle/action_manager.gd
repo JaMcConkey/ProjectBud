@@ -9,15 +9,20 @@ signal target_selection_started(action)
 signal action_completed(action)
 signal action_failed(action)
 
-func start_action(action: GameAction) -> void:
+func start_action(action: GameAction, pre_selected_target : Variant = null) -> void:
 	print("[ActionManager] Starting action: ", action.get_class())
 	current_action = action
 	if not action.requires_target:
-		print("[ActionManager] Action doesn't require target, executing immediately")
 		execute_current_action()
 	else:
-		print("[ActionManager] Action requires target, starting target selection")
-		target_selection_started.emit(action)
+		if action.is_valid_target(pre_selected_target):
+			if pre_selected_target is Hub:
+				action.target_hub = pre_selected_target
+			elif pre_selected_target is Vector2:
+				action.target_position = pre_selected_target
+			execute_current_action()
+		else:
+			target_selection_started.emit(action)
 
 func cancel_current_action() -> void:
 	if current_action != null:

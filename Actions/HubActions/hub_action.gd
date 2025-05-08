@@ -2,7 +2,6 @@ extends GameAction
 class_name HubAction
 
 var source_hub: Hub
-var target_hub: Hub = null  # Optional, for hub-to-hub actions
 
 #NOTE - Cost for hub actions will be Influence cost
 
@@ -14,10 +13,6 @@ func can_start() -> bool:
 	"""
 	Does not check for a target hub, checks if influence and cost are set
 	"""
-	print(super.can_execute())
-	print(cost > 0)
-	print(source_hub.get_current_influence())
-	print(cost)
 	return ( super.can_execute() and\
 	 cost > 0 and\
 	 source_hub.get_current_influence() >= cost)
@@ -28,9 +23,11 @@ func can_execute() -> bool:
 		
 	# Hub-specific checks
 	if cost > 0 and source_hub.get_current_influence() < cost:
+		print("Not enough influence, or cost not high enough")
 		return false
 	
 	if requires_target and target_hub == null:
+		print("required a target, and no target set")
 		return false
 		
 	return true

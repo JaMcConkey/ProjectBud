@@ -3,14 +3,17 @@ class_name HubActionButton
 
 signal hub_action_button_pressed(button : HubActionButton)
 
+@export var highlight: TextureRect
+@export var action_icon: TextureRect
+
 
 var hub_comp : HubComponent
 var active : bool :
 	set(v):
 		if v:
-			$active.show()
+			highlight.show()
 		else:
-			$active.hide()
+			highlight.hide()
 		active = v
 
 func set_component(p_hub_comp : HubComponent):
@@ -20,10 +23,16 @@ func set_component(p_hub_comp : HubComponent):
 	update_display()
 
 func update_display():
-	if not hub_comp.get_action().can_start():
-		disabled = true
+	var action : HubAction
+	action = hub_comp.get_action()
+	if action:
+		action_icon.texture = hub_comp.get_action().icon
+		if action.can_start():
+			disabled = false
+		else:
+			disabled = true
 	else:
-		disabled = false
+		push_warning("No action assigned here, why is there a button")
 
 
 func _on_pressed():

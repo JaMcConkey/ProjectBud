@@ -1,0 +1,81 @@
+[gd_scene load_steps=17 format=3 uid="uid://1hnlbgcut4qf"]
+
+[ext_resource type="Script" uid="uid://bt36l475x1t2q" path="res://Battle/battle_controller.gd" id="1_tgtdb"]
+[ext_resource type="Script" uid="uid://bu8bjng7hqwhs" path="res://team.gd" id="2_7dd3t"]
+[ext_resource type="Script" uid="uid://xgpikcc0k38v" path="res://Battle/battle_field.gd" id="2_b6xrl"]
+[ext_resource type="Shader" uid="uid://begw4p848roky" path="res://Shaders/space_background.gdshader" id="3_b6xrl"]
+[ext_resource type="Script" uid="uid://d26g5a0oobcvl" path="res://Battle/battlefield_camera.gd" id="3_p74yl"]
+[ext_resource type="Resource" uid="uid://c0vm8snpe4jyx" path="res://Teams/player_team.tres" id="3_rl2lk"]
+[ext_resource type="Script" uid="uid://cq8dnaxj850qo" path="res://Battle/hub_controller.gd" id="4_4si6t"]
+[ext_resource type="Resource" uid="uid://dbmxnkjgqst7c" path="res://Teams/neutral_team.tres" id="4_jah81"]
+[ext_resource type="PackedScene" uid="uid://dxlqwue3i8yg" path="res://Hubs/hub.tscn" id="5_ee7tm"]
+[ext_resource type="Script" uid="uid://cvqghp7tju6vu" path="res://Battle/lane_controller.gd" id="5_jwxql"]
+[ext_resource type="Resource" uid="uid://21yi27ugd5cr" path="res://Teams/enemy_team.tres" id="5_uw2cy"]
+[ext_resource type="Script" uid="uid://cuqs6xrjpgk4k" path="res://Battle/DELETELATER.gd" id="7_jah81"]
+[ext_resource type="Script" uid="uid://d3ea4vsf6fjhe" path="res://Battle/influence_manager.gd" id="8_ee7tm"]
+[ext_resource type="Script" uid="uid://ccoj4hs1wdamk" path="res://Battle/action_manager.gd" id="10_7dd3t"]
+[ext_resource type="PackedScene" uid="uid://fasff80qoufc" path="res://influence_blob.tscn" id="10_p74yl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r7rot"]
+shader = ExtResource("3_b6xrl")
+shader_parameter/bg_color = Color(0, 0, 0, 1)
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/bigStarSlow = 2.0
+shader_parameter/mediumStarSlow = 6.0
+shader_parameter/smallStarSlow = 8.0
+shader_parameter/smallStarAmount = 0.002
+shader_parameter/mediumStarAmount = 0.01
+shader_parameter/bigStarAmount = 0.02
+
+[node name="BattleController" type="Node" node_paths=PackedStringArray("battlefield", "hub_controller", "action_manager", "influence_Manager")]
+script = ExtResource("1_tgtdb")
+battlefield = NodePath("BattleField")
+hub_controller = NodePath("HubController")
+action_manager = NodePath("ActionManager")
+influence_Manager = NodePath("InfluenceManager")
+teams = Array[ExtResource("2_7dd3t")]([ExtResource("3_rl2lk"), ExtResource("4_jah81"), ExtResource("5_uw2cy")])
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -2
+
+[node name="Background" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_r7rot")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+script = ExtResource("7_jah81")
+
+[node name="BattlefieldCamera" type="Camera2D" parent="."]
+script = ExtResource("3_p74yl")
+
+[node name="BattleField" type="Node" parent="."]
+script = ExtResource("2_b6xrl")
+arena_size = Vector2(1920, 1080)
+
+[node name="HubController" type="Node" parent="."]
+script = ExtResource("4_4si6t")
+hub_scene = ExtResource("5_ee7tm")
+
+[node name="LaneController" type="Node2D" parent="."]
+script = ExtResource("5_jwxql")
+
+[node name="InfluenceManager" type="Node" parent="."]
+script = ExtResource("8_ee7tm")
+influence_blob_scene = ExtResource("10_p74yl")
+
+[node name="ActionManager" type="Node" parent="."]
+script = ExtResource("10_7dd3t")

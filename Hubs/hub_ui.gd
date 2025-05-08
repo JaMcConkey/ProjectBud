@@ -6,7 +6,7 @@ var hub : Hub
 @export var action_holder : Control
 @export var action_h_box : HBoxContainer
 @export var action_button_scene : PackedScene
-var hub_action_buttons : Dictionary[HubComponent,HubActionButton] #String is action_type
+var hub_action_buttons : Dictionary[HubComponent,HubActionButton] #String is action_tpe
 
 @export var influence_display_label : Label
 @export var health_ui : HubHealthUI
@@ -45,18 +45,27 @@ func _update_hub_actions():
 	
 	for comp in hub_action_buttons:
 		if is_instance_valid(hub_action_buttons[comp]):
-			hub_action_buttons[comp].update_button_state()
-func _add_comp_button(hub_comp : HubComponent):
+			hub_action_buttons[comp].update_display()
+func _add_comp_button(hub_comp : HubComponent) -> HubActionButton:
 	var button = action_button_scene.instantiate() as HubActionButton
 	button.set_component(hub_comp)
 	button.hub_action_button_pressed.connect(_on_pressed)
 	action_h_box.add_child(button)
 	button.update_display() #Manually updating here, but shouldn't need to
+	return button
 
 func _on_pressed(button : HubActionButton):
-	var action = button.hub_comp.get_action()
-	battle_controller.action_manager.start_action(action)
+	for c_button in hub_action_buttons.values():
+		c_button.active = false
+		if is_instance_valid(c_button):
+			c_button.active = (c_button == button)
+			button.hub_comp.execute_hub_action()
+			button.hub_comp.cache_target(button.hub_comp.get_action().target_hub)
+
 func show_actions():
 	action_holder.show()
+	for c_button in hub_action_buttons.values():
+		c_button.active = false
+
 func hide_actions():
 	action_holder.hide()

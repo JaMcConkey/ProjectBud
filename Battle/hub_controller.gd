@@ -31,6 +31,10 @@ func place_hub(pos : Vector2):
 		var inf_s = InfluenceSender.new()
 		var inf_r = InfluenceReceiver.new()
 		var inf_p = InfluenceProducer.new()
+		var hp_comp = HealthComponent.new()
+		hp_comp.max_health = 50
+		hp_comp.cur_health = 20
+		hub.add_hub_component(hp_comp)
 		hub.add_hub_component(inf_p)
 		hub.add_hub_component(inf_s)
 		hub.add_hub_component(inf_r)

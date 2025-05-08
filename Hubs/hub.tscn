@@ -1,25 +1,43 @@
-[gd_scene load_steps=7 format=3 uid="uid://dxlqwue3i8yg"]
+[gd_scene load_steps=11 format=3 uid="uid://dxlqwue3i8yg"]
 
 [ext_resource type="Script" uid="uid://cnb60yyc0nem1" path="res://Hubs/hub.gd" id="1_cqvac"]
+[ext_resource type="Shader" uid="uid://c5mwkqxppvb4y" path="res://Shaders/glowystuff.gdshader" id="1_ly8ps"]
 [ext_resource type="Script" uid="uid://cv0wdnr1y75aa" path="res://Hubs/hub_collider.gd" id="3_04o0g"]
 [ext_resource type="Texture2D" uid="uid://b1t5rc0skcvcc" path="res://Circle.png" id="3_cqvac"]
 [ext_resource type="PackedScene" uid="uid://d2tyer23pgqbs" path="res://Hubs/hub_action_button.tscn" id="4_pixk4"]
 [ext_resource type="PackedScene" uid="uid://c3x8v2l4ay4fk" path="res://hub_ui.tscn" id="5_04o0g"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5hrge"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ly8ps"]
+shader = ExtResource("1_ly8ps")
+shader_parameter/color_a = Color(0.7, 0.7, 0.7, 1)
+shader_parameter/color_b = Color(0.815686, 1, 0, 1)
+shader_parameter/colors_affect_alpha = false
+shader_parameter/flash_amount = 1.0
+shader_parameter/flash_speed = 2.8
+shader_parameter/transparency = 1.0
+shader_parameter/intensity = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_87aa2"]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_1sfe8"]
 radius = 29.14
 
-[node name="Hub" type="Node2D"]
+[node name="Hub" type="Node2D" node_paths=PackedStringArray("hub_ui")]
+material = SubResource("ShaderMaterial_5hrge")
 script = ExtResource("1_cqvac")
+hub_ui = NodePath("HubUI")
 action_button_scene = ExtResource("4_pixk4")
 
 [node name="temp_highlight" type="Sprite2D" parent="."]
 visible = false
-modulate = Color(1, 1, 0.054902, 1)
+material = SubResource("ShaderMaterial_ly8ps")
 scale = Vector2(0.12, 0.12)
 texture = ExtResource("3_cqvac")
 
 [node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_87aa2")
 scale = Vector2(0.113, 0.113)
 texture = ExtResource("3_cqvac")
 
@@ -40,6 +58,10 @@ script = ExtResource("3_04o0g")
 shape = SubResource("CircleShape2D_1sfe8")
 
 [node name="HubUI" parent="." instance=ExtResource("5_04o0g")]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 
 [connection signal="mouse_entered" from="HubCollider" to="." method="_on_area_2d_mouse_entered"]
 [connection signal="mouse_exited" from="HubCollider" to="." method="_on_area_2d_mouse_exited"]

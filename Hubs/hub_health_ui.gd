@@ -5,6 +5,9 @@ var health_comp : HealthComponent
 @export var health_bar : ProgressBar
 
 func bind_health_component(p_health_component : HealthComponent):
+	if health_bar != null:
+		push_warning("health comp already bound")
+		return
 	health_comp = p_health_component
 	health_comp.health_updated.connect(_update_health)
 

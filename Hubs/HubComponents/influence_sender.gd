@@ -1,8 +1,7 @@
 extends HubComponent
 class_name InfluenceSender
 
-var _send_val : int 
-var _cached_action : SendInfluenceAction
+var _send_val : int
 
 func set_send_value(amount : int):
 	amount = clampi(amount,0,hub.get_current_influence())

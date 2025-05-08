@@ -1,24 +1,56 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2tyer23pgqbs"]
+[gd_scene load_steps=6 format=3 uid="uid://d2tyer23pgqbs"]
 
 [ext_resource type="Script" uid="uid://bybdv1wnqll5h" path="res://Hubs/hub_action_button.gd" id="1_ob7bj"]
-[ext_resource type="Texture2D" uid="uid://iogj2ge8rrst" path="res://icon.svg" id="2_omd22"]
+[ext_resource type="Shader" uid="uid://c5mwkqxppvb4y" path="res://Shaders/glowystuff.gdshader" id="2_hs12t"]
+[ext_resource type="Texture2D" uid="uid://46d4grhwblkv" path="res://Art/Icons/send_inf.png" id="3_efb7j"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pixk4"]
-size = Vector2(24, 24)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0kmd0"]
+shader = ExtResource("2_hs12t")
+shader_parameter/color_a = Color(0.7, 0.7, 0.7, 1)
+shader_parameter/color_b = Color(0.599059, 0.599059, 7.70092e-07, 1)
+shader_parameter/colors_affect_alpha = false
+shader_parameter/flash_amount = 1.0
+shader_parameter/flash_speed = 3.13
+shader_parameter/transparency = 1.0
+shader_parameter/intensity = 1.0
 
-[node name="Button" type="Button"]
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5fpwa"]
+
+[node name="Button" type="Button" node_paths=PackedStringArray("highlight", "action_icon")]
+custom_minimum_size = Vector2(32, 32)
+anchors_preset = -1
+anchor_right = 0.017
+anchor_bottom = 0.03
+offset_right = -0.640003
+offset_bottom = -0.400002
 size_flags_horizontal = 4
 size_flags_vertical = 4
-icon = SubResource("PlaceholderTexture2D_pixk4")
 script = ExtResource("1_ob7bj")
+highlight = NodePath("Highlight")
+action_icon = NodePath("Icon")
 
-[node name="active" type="TextureRect" parent="."]
+[node name="Highlight" type="TextureRect" parent="."]
 visible = false
+material = SubResource("ShaderMaterial_0kmd0")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_omd22")
+mouse_filter = 2
+texture = SubResource("PlaceholderTexture2D_5fpwa")
+expand_mode = 1
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_efb7j")
 expand_mode = 1
