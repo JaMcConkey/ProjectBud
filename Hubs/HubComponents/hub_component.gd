@@ -1,54 +1,113 @@
 extends Node2D
 class_name HubComponent
 
-signal on_any_hub_component_updated()
-signal hub_action_updated()
-var hub : Hub
-var _cached_target : Hub
-var _cached_action : GameAction
-var action_cooldown : float = 3
-var cooldown_timer : float
-var _auto_execute_timer : float
-var _auto_execute : bool
-func init_component(p_hub : Hub):
+signal component_updated()  # More generic signal name
+signal action_updated()     # Specific to action changes
+
+@export var action_cooldown: float = 3.0
+var hub: Hub = null
+var _current_target: Hub = null
+var _current_action: GameAction = null
+var _cooldown_timer: float = 0.0
+var _auto_execute_timer: float = 0.0
+var _auto_execute_enabled: bool = false
+var _action_in_progress: bool = false
+var _action_manager : ActionManager
+
+func init_component(p_hub: Hub) -> void:
+	"""Initialize the component with its parent Hub."""
 	hub = p_hub
-	_auto_execute = true
+	_action_manager = hub.battle_controller.action_manager
+	_auto_execute_enabled = true
+	_cache_action()  # Cache action on init
+
 func get_action() -> GameAction:
-	"""
-	Will return null if no action
-	"""
-	return null
-func execute_hub_action(ignore_cooldown : bool = false) -> bool:
-	if not get_action():
-		push_warning("No Action to execute, why is this called")
-		return false
-	if _cached_action.can_start():
-		hub.battle_controller.action_manager.start_action(_cached_action)
-		hub.battle_controller.action_manager.action_completed.connect(_on_action_done)
-	return true
-func _on_action_done(action : GameAction):
-	if action == _cached_action:
-		cooldown_timer = action_cooldown
-		hub.battle_controller.action_manager.action_completed.disconnect(_on_action_done)
-func _auto_execute_action(delta : float) -> bool:
-	if not get_action() or not _auto_execute or not _cached_action:
-		return false
-	if _auto_execute_timer >= 0:
-		_auto_execute_timer -= delta
-	else:
-		if _cached_action.can_start():
-			if _cached_action.requires_target and _cached_target:
-				hub.battle_controller.action_manager.start_action(_cached_action,_cached_target)
-				_auto_execute_timer = action_cooldown
-	return false
-func cache_target(p_target):
-	if not _cached_action:
-		return
-	if _cached_action.is_valid_target(p_target):
-		_cached_target = p_target
+	"""Returns the current action, or null if none exists."""
+	return _current_action
+
 func get_all_actions() -> Array[GameAction]:
+	"""Returns all potential actions this component can produce."""
 	return []
+
+func execute_action(ignore_cooldown: bool = false) -> bool:
+	"""Attempt to execute the current action. Returns success status."""
+	if not _current_action:
+		push_error("Attempted to execute null action")
+		return false
+		
+	if _cooldown_timer > 0 and not ignore_cooldown:
+		return false
+		
+	if not _current_action.can_start():
+		return false
+		
+	if _current_action.requires_target and not _current_target:
+		push_warning("Action requires target but none is set")
+		_action_manager.submit_action(_current_action,\
+		hub.team_owner,\
+		_action_manager.ExecutionContext.PLAYER_UI)
+	else:
+		_action_manager.submit_action(_current_action,\
+		hub.team_owner,\
+		)
+	_action_in_progress = true
+	#1 Shot connect? 
+	_action_manager.action_completed.connect(_on_action_completed)
+	
+	return true
+
+func set_target(new_target: Hub) -> void:
+	"""Set a new target for the action if valid."""
+	if not _current_action:
+		return
+		
+	if _current_action.is_valid_target(new_target):
+		_current_target = new_target
+		action_updated.emit()
+
 func _process(delta: float) -> void:
-	_auto_execute_action(delta)
-	if cooldown_timer >= 0:
-		cooldown_timer -= delta
+	"""Handle cooldowns and auto-execution."""
+	_update_cooldowns(delta)
+	
+	if _auto_execute_enabled and not _action_in_progress:
+		_try_auto_execute(delta)
+
+#region Internal Functions -----------------------------------------------------
+
+func _cache_action() -> void:
+	"""Cache the current action and validate any existing target."""
+	_current_action = get_action()
+	if _current_action and _current_target:
+		if not _current_action.is_valid_target(_current_target):
+			_current_target = null
+	action_updated.emit()
+	component_updated.emit()
+
+func _update_cooldowns(delta: float) -> void:
+	"""Update all cooldown timers."""
+	if _cooldown_timer > 0:
+		_cooldown_timer = max(0.0, _cooldown_timer - delta)
+		
+	if _auto_execute_timer > 0:
+		_auto_execute_timer = max(0.0, _auto_execute_timer - delta)
+
+func _try_auto_execute(delta: float) -> void:
+	"""Attempt automatic execution if conditions are met."""
+	if not _current_action or _auto_execute_timer > 0:
+		return
+
+	if _current_action.requires_target and not _current_target:
+		return
+		
+	if execute_action():
+		_auto_execute_timer = action_cooldown
+
+func _on_action_completed(action: GameAction) -> void:
+	"""Handle action completion cleanup."""
+	if action == _current_action:
+		_cooldown_timer = action_cooldown
+		_action_in_progress = false
+		hub.battle_controller.action_manager.action_completed.disconnect(_on_action_completed)
+		component_updated.emit()
+
+#endregion

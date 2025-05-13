@@ -32,7 +32,7 @@ func _ready() -> void:
 	start_battle()
 	game_context = GameContext.new(self)
 	_cur_mode = STATE.Idle
-	action_manager.target_selection_started.connect(_action_started)
+	action_manager.player_target_selection_started.connect(_action_started)
 	action_manager.action_completed.connect(_action_ended)
 	action_manager.action_failed.connect(_action_ended)
 

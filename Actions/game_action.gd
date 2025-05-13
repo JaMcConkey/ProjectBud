@@ -11,6 +11,7 @@ enum TARGET_TYPE{
 var name: String
 var icon: Texture2D
 var action_type: String  #Maybe swap to enum? Not sure
+var source_team : Team
 var cost: int = 0 #Generic cost, sub classes will decide what it's for
 var requires_target: bool = false
 var target_type : TARGET_TYPE

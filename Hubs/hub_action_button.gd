@@ -19,7 +19,7 @@ var active : bool :
 func set_component(p_hub_comp : HubComponent):
 	hub_comp = p_hub_comp
 	pressed.connect(_on_pressed)
-	hub_comp.hub_action_updated.connect(update_display)
+	hub_comp.action_updated.connect(update_display)
 	update_display()
 
 func update_display():
