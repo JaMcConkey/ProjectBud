@@ -3,7 +3,7 @@ class_name ActionManager
 
 # Simplified execution context
 enum ExecutionContext {
-	PLAYER_UI,      # From player interface
+	PLAYER_INPUT,      # From player interface
 	DIRECT          # Immediate system/AI execution
 }
 
@@ -11,6 +11,7 @@ var _current_player_action: GameAction = null
 var _direct_action_queue: Array[GameAction] = []
 
 signal player_target_selection_started(action)
+signal player_input_received(input)
 signal action_completed(action)
 signal action_failed(action)
 signal action_rejected(action, reason)
@@ -25,7 +26,7 @@ func submit_action(action: GameAction, team: Team, context: ExecutionContext = E
 		return false
 	
 	match context:
-		ExecutionContext.PLAYER_UI:
+		ExecutionContext.PLAYER_INPUT:
 			return _handle_player_action(action)
 		ExecutionContext.DIRECT:
 			return _execute_immediate(action)
@@ -45,8 +46,12 @@ func select_player_target(target: Variant):
 		_current_player_action.target_hub = target
 	elif target is Vector2:
 		_current_player_action.target_position = target
-	
+	else:
+		push_error("Invalid input type recieved")
+		return
+	player_input_received.emit(target)
 	_execute_immediate(_current_player_action)
+	
 	_current_player_action = null
 
 func process_queues():
@@ -90,14 +95,7 @@ func _execute_immediate(action: GameAction) -> bool:
 # Validation -------------------------------------------------------------------
 
 func _validate_action(action: GameAction, context: ExecutionContext) -> bool:
-	# Team-based validation
-	if not action.source_team:
-		return false
-		
-	if context == ExecutionContext.PLAYER_UI and not action.source_team.is_local:
-		return false
-		
-	if action.requires_human and action.source_team.is_ai:
-		return false
-	
-	return action.is_valid()
+	"""
+	Possible for future multiplayer here?
+	"""
+	return true

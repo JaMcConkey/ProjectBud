@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3x8v2l4ay4fk"]
+[gd_scene load_steps=7 format=3 uid="uid://d0a5k7wrlqkf8"]
 
 [ext_resource type="Script" uid="uid://dnwjbg7hlbo4w" path="res://Hubs/hub_ui.gd" id="1_ak0c7"]
 [ext_resource type="PackedScene" uid="uid://d2tyer23pgqbs" path="res://Hubs/hub_action_button.tscn" id="2_1i22f"]
-[ext_resource type="Script" uid="uid://cwha0dqqhwrai" path="res://Hubs/hub_health_ui.gd" id="3_suuu7"]
+[ext_resource type="Script" path="res://Hubs/hub_health_ui.gd" id="3_suuu7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_cqvac"]
 font_color = Color(0, 0, 0, 1)

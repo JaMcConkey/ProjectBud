@@ -1,11 +1,11 @@
 [gd_scene load_steps=11 format=3 uid="uid://dxlqwue3i8yg"]
 
-[ext_resource type="Script" uid="uid://cnb60yyc0nem1" path="res://Hubs/hub.gd" id="1_cqvac"]
-[ext_resource type="Shader" uid="uid://c5mwkqxppvb4y" path="res://Shaders/glowystuff.gdshader" id="1_ly8ps"]
-[ext_resource type="Script" uid="uid://cv0wdnr1y75aa" path="res://Hubs/hub_collider.gd" id="3_04o0g"]
+[ext_resource type="Script" path="res://Hubs/hub.gd" id="1_04o0g"]
+[ext_resource type="Shader" path="res://Shaders/glowystuff.gdshader" id="1_ly8ps"]
 [ext_resource type="Texture2D" uid="uid://b1t5rc0skcvcc" path="res://Circle.png" id="3_cqvac"]
 [ext_resource type="PackedScene" uid="uid://d2tyer23pgqbs" path="res://Hubs/hub_action_button.tscn" id="4_pixk4"]
-[ext_resource type="PackedScene" uid="uid://c3x8v2l4ay4fk" path="res://hub_ui.tscn" id="5_04o0g"]
+[ext_resource type="PackedScene" uid="uid://d0a5k7wrlqkf8" path="res://hub_ui.tscn" id="5_04o0g"]
+[ext_resource type="Script" path="res://Hubs/hub_collider.gd" id="5_ly8ps"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5hrge"]
 
@@ -26,7 +26,7 @@ radius = 29.14
 
 [node name="Hub" type="Node2D" node_paths=PackedStringArray("hub_ui")]
 material = SubResource("ShaderMaterial_5hrge")
-script = ExtResource("1_cqvac")
+script = ExtResource("1_04o0g")
 hub_ui = NodePath("HubUI")
 action_button_scene = ExtResource("4_pixk4")
 
@@ -52,7 +52,9 @@ scale = Vector2(0.113, 0.113)
 texture = ExtResource("3_cqvac")
 
 [node name="HubCollider" type="Area2D" parent="."]
-script = ExtResource("3_04o0g")
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("5_ly8ps")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HubCollider"]
 shape = SubResource("CircleShape2D_1sfe8")

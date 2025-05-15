@@ -45,18 +45,20 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 		push_warning("Action requires target but none is set")
 		_action_manager.submit_action(_current_action,\
 		hub.team_owner,\
-		_action_manager.ExecutionContext.PLAYER_UI)
+		_action_manager.ExecutionContext.PLAYER_INPUT)
+		_action_manager.player_input_received.connect(set_target,CONNECT_ONE_SHOT)
+		#NOTE never disconnected if action canceled, fix later
 	else:
 		_action_manager.submit_action(_current_action,\
 		hub.team_owner,\
 		)
 	_action_in_progress = true
 	#1 Shot connect? 
-	_action_manager.action_completed.connect(_on_action_completed)
+	_action_manager.action_completed.connect(_on_action_completed,CONNECT_ONE_SHOT)
 	
 	return true
 
-func set_target(new_target: Hub) -> void:
+func set_target(new_target) -> void:
 	"""Set a new target for the action if valid."""
 	if not _current_action:
 		return
@@ -65,10 +67,12 @@ func set_target(new_target: Hub) -> void:
 		_current_target = new_target
 		action_updated.emit()
 
+func clear_target() -> void:
+	_current_target = null
+
 func _process(delta: float) -> void:
 	"""Handle cooldowns and auto-execution."""
 	_update_cooldowns(delta)
-	
 	if _auto_execute_enabled and not _action_in_progress:
 		_try_auto_execute(delta)
 
@@ -107,7 +111,7 @@ func _on_action_completed(action: GameAction) -> void:
 	if action == _current_action:
 		_cooldown_timer = action_cooldown
 		_action_in_progress = false
-		hub.battle_controller.action_manager.action_completed.disconnect(_on_action_completed)
+	#	hub.battle_controller.action_manager.action_completed.disconnect(_on_action_completed)
 		component_updated.emit()
 
 #endregion

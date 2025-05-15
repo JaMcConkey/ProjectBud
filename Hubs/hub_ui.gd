@@ -59,9 +59,8 @@ func _on_pressed(button : HubActionButton):
 		c_button.active = false
 		if is_instance_valid(c_button):
 			c_button.active = (c_button == button)
-			button.hub_comp.execute_hub_action()
-			button.hub_comp.cache_target(button.hub_comp.get_action().target_hub)
-
+			button.hub_comp.clear_target()
+			button.hub_comp.execute_action()
 func show_actions():
 	action_holder.show()
 	for c_button in hub_action_buttons.values():

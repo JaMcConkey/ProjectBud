@@ -131,11 +131,10 @@ func _handle_target_selection_click():
 			break
 	
 	if clicked_hub:
-		action_manager.select_hub_target(clicked_hub)
+		action_manager.select_player_target(clicked_hub)
 		_set_mode(STATE.Idle)
 	else:
-		#For now passing the clicked position this way, action manager will bug out
-		action_manager.select_position_target(get_viewport().get_mouse_position())
+		action_manager.select_player_target(get_viewport().get_mouse_position())
 
 func _handle_hub_selected_click():
 	var clicked_hub = null
