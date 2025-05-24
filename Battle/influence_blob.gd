@@ -34,7 +34,7 @@ func set_target(node : Node2D):
 
 func move(delta : float):
 	global_position += global_position.direction_to(_target.global_position) * move_speed * delta
-	tar_line.points = [Vector2.ZERO,to_local(_target.global_position)]
+	#tar_line.points = [Vector2.ZERO,to_local(_target.global_position)]
 func check_collision(area : Area2D):
 	if area is InfluenceBlob:
 		on_blob_collide.emit(self,area)

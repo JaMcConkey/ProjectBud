@@ -33,8 +33,8 @@ func _ready() -> void:
 	game_context = GameContext.new(self)
 	_cur_mode = STATE.Idle
 	action_manager.player_target_selection_started.connect(_action_started)
-	action_manager.action_completed.connect(_action_ended)
-	action_manager.action_failed.connect(_action_ended)
+	#action_manager.action_completed.connect(_action_ended)
+	#action_manager.action_failed.connect(_action_ended)
 
 func _physics_process(delta: float) -> void:
 	if is_dragging:
@@ -76,7 +76,7 @@ func _input(event: InputEvent) -> void:
 	# Escape to idle for now
 	if event.is_action_pressed("ui_cancel"):
 		if _cur_mode != STATE.Idle:
-			action_manager.cancel_current_action()
+			#action_manager.cancel_current_action()
 			_clear_selection()
 			_set_mode(STATE.Idle)
 
