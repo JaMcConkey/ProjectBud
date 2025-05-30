@@ -19,12 +19,13 @@ var target_hub: Hub = null  # Optional, for hub-to-hub actions
 
 var target_position: Vector2 = Vector2.ZERO  
 
-func _init(p_name: String, p_icon: Texture2D, p_type: String, p_requires_target: bool = false, p_cost: int = 0):
+func _init(p_name: String, p_icon: Texture2D, p_type: String, p_team : Team, p_requires_target: bool = false, p_cost: int = 0):
 	name = p_name
 	icon = p_icon
 	action_type = p_type
 	requires_target = p_requires_target
 	cost = p_cost
+	source_team = p_team
 
 func can_start() -> bool:
 	"""Checks if an action can be started"""
@@ -42,7 +43,7 @@ func execute() -> bool:
 	if not can_execute():
 		return false
 	return true
-func has_target() -> bool:
+func has_valid_target() -> bool:
 	if requires_target:
 		match target_type:
 			TARGET_TYPE.NONE:
@@ -69,3 +70,16 @@ func is_valid_target(target) -> bool:
 				if target is Hub:
 					return true
 	return false
+func set_target(target) -> bool:
+	if is_valid_target(target):
+		if target is Vector2:
+			target_position = target
+		elif target is Hub:
+			target_hub = target
+		else:
+			push_error("?????? Invalid target type?")
+		return true
+	return false
+func clear_target():
+	target_hub = null
+	target_position = Vector2.ZERO

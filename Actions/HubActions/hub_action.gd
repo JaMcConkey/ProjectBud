@@ -5,8 +5,8 @@ var source_hub: Hub
 
 #NOTE - Cost for hub actions will be Influence cost
 
-func _init(p_name: String, p_icon: Texture2D, p_type: String, p_source: Hub, p_requires_target: bool = true, p_cost: int = 0):
-	super(p_name, p_icon, p_type, p_requires_target, p_cost)
+func _init(p_name: String, p_icon: Texture2D, p_type: String, p_team : Team, p_source: Hub, p_requires_target: bool = true, p_cost: int = 0):
+	super(p_name, p_icon, p_type,p_team, p_requires_target, p_cost)
 	source_hub = p_source
 
 func can_start() -> bool:

@@ -6,8 +6,8 @@ const icon_preload = preload("res://Art/Icons/send_inf.png")
 var influence_amount: int 
 var _inf_man : InfluenceManager
 
-func _init(source: Hub, amount: int):
-	super("Send Influence", icon_preload, "send_influence", source, true, amount)
+func _init(source: Hub, amount: int):	
+	super("Send Influence", icon_preload, "send_influence",source.team_owner, source, true, amount)
 	set_send_amount(amount)
 	requires_target = true
 	_inf_man = source.battle_controller.influence_Manager

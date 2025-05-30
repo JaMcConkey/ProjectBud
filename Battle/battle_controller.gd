@@ -32,7 +32,7 @@ func _ready() -> void:
 	start_battle()
 	game_context = GameContext.new(self)
 	_cur_mode = STATE.Idle
-	action_manager.player_target_selection_started.connect(_action_started)
+	action_manager.target_required.connect(_action_started)
 	#action_manager.action_completed.connect(_action_ended)
 	#action_manager.action_failed.connect(_action_ended)
 
@@ -76,7 +76,7 @@ func _input(event: InputEvent) -> void:
 	# Escape to idle for now
 	if event.is_action_pressed("ui_cancel"):
 		if _cur_mode != STATE.Idle:
-			#action_manager.cancel_current_action()
+			action_manager.cancel_current_player_action()
 			_clear_selection()
 			_set_mode(STATE.Idle)
 
@@ -131,10 +131,10 @@ func _handle_target_selection_click():
 			break
 	
 	if clicked_hub:
-		action_manager.select_player_target(clicked_hub)
+		action_manager.provide_target(clicked_hub)
 		_set_mode(STATE.Idle)
 	else:
-		action_manager.select_player_target(get_viewport().get_mouse_position())
+		action_manager.provide_target(get_viewport().get_mouse_position())
 
 func _handle_hub_selected_click():
 	var clicked_hub = null

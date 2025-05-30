@@ -22,8 +22,11 @@ func init_component(p_hub: Hub) -> void:
 	_cache_action()  # Cache action on init
 	_tar_line = Line2D.new()
 	add_child(_tar_line)
+	_tar_line.show_behind_parent = true
 	_action_manager.action_completed.connect(_on_action_completed)
 
+func toggle_auto_fire(val : bool):
+	_auto_execute_enabled = val
 
 func get_action() -> GameAction:
 	"""Returns the current action, or null if none exists."""
@@ -42,27 +45,28 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 	if _cooldown_timer > 0 and not ignore_cooldown:
 		return false
 		
-	if not _current_action.can_start():
+	if !_current_action.can_start():
 		return false
 		
 	_action_in_progress = true
-	if _current_action.requires_target and _current_target == null:
-		_action_manager.submit_action(_current_action,\
-		hub.team_owner,\
-		_action_manager.ExecutionContext.PLAYER_INPUT)
-		#_action_manager.player_input_received.connect(set_target,CONNECT_ONE_SHOT)
-		#NOTE never disconnected if action canceled, fix later
-	else:
-		_action_manager.submit_action(_current_action,\
-		hub.team_owner,\
-		)
-	#1 Shot connect? 
-	
-	return true
+	if _action_manager.submit_action(_current_action,\
+	hub.team_owner,):
+		return true
+	_action_in_progress
+	return false
 
-func set_target(new_target) -> void:
+func start_targeting() -> void:
+	"""Calls action manager to start setting a target"""
+	if get_action() == null:
+		return
+	_action_manager.request_target_for_action(get_action())
+	if not _action_manager.target_selected.is_connected(set_target):
+		_action_manager.target_selected.connect(set_target)
+	pass
+
+func set_target(action : GameAction, new_target : Variant) -> void:
 	"""Set a new target for the action if valid."""
-	if not _current_action:
+	if not _current_action or action != _current_action:
 		return
 		
 	if _current_action.is_valid_target(new_target):
@@ -71,7 +75,10 @@ func set_target(new_target) -> void:
 	_update_target_line()
 
 func clear_target() -> void:
+	"""Clears current target for Hub Comp AND action"""
 	_current_target = null
+	get_action().clear_target()
+	_update_target_line()
 func _process(delta: float) -> void:
 	"""Handle cooldowns and auto-execution."""
 	_update_cooldowns(delta)
@@ -80,8 +87,11 @@ func _process(delta: float) -> void:
 
 #region Internal Functions -----------------------------------------------------
 func _update_target_line():
-	_tar_line.points = [Vector2.ZERO,to_local(_current_target.global_position)]
-
+	"""Updates the action target line - Children should set their own textures"""
+	if _current_target != null:
+		_tar_line.points = [Vector2.ZERO,to_local(_current_target.global_position)]
+	else:
+		_tar_line.points = []
 func _cache_action() -> void:
 	"""Cache the current action and validate any existing target."""
 	_current_action = get_action()
@@ -105,7 +115,7 @@ func _try_auto_execute(delta: float) -> void:
 	if not _current_action or _auto_execute_timer > 0:
 		return
 
-	if _current_action.requires_target and not _current_target:
+	if !_current_action.has_valid_target():
 		return
 		
 	if execute_action():
@@ -116,9 +126,7 @@ func _on_action_completed(action: GameAction) -> void:
 	if action == _current_action:
 		_cooldown_timer = action_cooldown
 		_action_in_progress = false
-	#	hub.battle_controller.action_manager.action_completed.disconnect(_on_action_completed)
 		component_updated.emit()
 		
-		set_target(action.target_hub)
 
 #endregion

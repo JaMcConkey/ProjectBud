@@ -16,7 +16,7 @@ shader_parameter/intensity = 1.0
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5fpwa"]
 
-[node name="Button" type="Button" node_paths=PackedStringArray("highlight", "action_icon")]
+[node name="Button" type="Button" node_paths=PackedStringArray("highlight", "action_icon", "set_target_button", "clear_target_button", "toggle_auto_fire", "expand_panel")]
 custom_minimum_size = Vector2(32, 32)
 anchors_preset = -1
 anchor_right = 0.017
@@ -25,9 +25,25 @@ offset_right = -0.640003
 offset_bottom = -0.400002
 size_flags_horizontal = 4
 size_flags_vertical = 4
+toggle_mode = true
 script = ExtResource("1_ob7bj")
 highlight = NodePath("Highlight")
 action_icon = NodePath("Icon")
+set_target_button = NodePath("Expanded Panel/HBoxContainer/Set Target")
+clear_target_button = NodePath("Expanded Panel/HBoxContainer/Clear Target")
+toggle_auto_fire = NodePath("CheckButton")
+expand_panel = NodePath("Expanded Panel")
+
+[node name="CheckButton" type="CheckButton" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -22.0
+offset_top = -23.0
+offset_right = 22.0
+offset_bottom = 1.0
+grow_horizontal = 2
 
 [node name="Highlight" type="TextureRect" parent="."]
 visible = false
@@ -54,3 +70,39 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("3_efb7j")
 expand_mode = 1
+
+[node name="Expanded Panel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Expanded Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_top = 1.0
+offset_right = 34.0
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Set Target" type="Button" parent="Expanded Panel/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+icon = ExtResource("3_efb7j")
+expand_icon = true
+
+[node name="Clear Target" type="Button" parent="Expanded Panel/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+icon = ExtResource("3_efb7j")
+expand_icon = true
