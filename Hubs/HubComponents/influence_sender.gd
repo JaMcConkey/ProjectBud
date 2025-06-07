@@ -41,6 +41,5 @@ func get_action() -> GameAction:
 # Optional: Override execution for additional influence checks
 func execute_action(ignore_cooldown: bool = false) -> bool:
 	if get_send_value() <= 0:
-		push_warning("Attempted to send 0 influence")
 		return false
 	return super.execute_action(ignore_cooldown)

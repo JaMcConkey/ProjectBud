@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://1hnlbgcut4qf"]
+[gd_scene load_steps=18 format=3 uid="uid://1hnlbgcut4qf"]
 
 [ext_resource type="Script" uid="uid://bt36l475x1t2q" path="res://Battle/battle_controller.gd" id="1_tgtdb"]
 [ext_resource type="Script" uid="uid://bu8bjng7hqwhs" path="res://team.gd" id="2_7dd3t"]
@@ -26,6 +26,9 @@ shader_parameter/smallStarSlow = 8.0
 shader_parameter/smallStarAmount = 0.002
 shader_parameter/mediumStarAmount = 0.01
 shader_parameter/bigStarAmount = 0.02
+
+[sub_resource type="LabelSettings" id="LabelSettings_jah81"]
+font_size = 32
 
 [node name="BattleController" type="Node" node_paths=PackedStringArray("battlefield", "hub_controller", "action_manager", "influence_Manager")]
 script = ExtResource("1_tgtdb")
@@ -57,14 +60,15 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
+label_settings = SubResource("LabelSettings_jah81")
 script = ExtResource("7_jah81")
 
 [node name="BattlefieldCamera" type="Camera2D" parent="."]
+zoom = Vector2(1.4, 1.4)
 script = ExtResource("3_p74yl")
 
 [node name="BattleField" type="Node" parent="."]
 script = ExtResource("2_b6xrl")
-arena_size = Vector2(1920, 1080)
 
 [node name="HubController" type="Node" parent="."]
 script = ExtResource("4_4si6t")

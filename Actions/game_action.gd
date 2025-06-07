@@ -2,6 +2,8 @@
 extends Resource
 class_name GameAction
 
+signal target_updated(target)
+
 enum TARGET_TYPE{
 	NONE,
 	POSITION,

@@ -23,11 +23,11 @@ func can_execute() -> bool:
 		
 	# Hub-specific checks
 	if cost > 0 and source_hub.get_current_influence() < cost:
-		print("Not enough influence, or cost not high enough")
+		#print("Not enough influence, or cost not high enough")
 		return false
 	
 	if requires_target and target_hub == null:
-		print("required a target, and no target set")
+		#print("required a target, and no target set")
 		return false
 		
 	return true

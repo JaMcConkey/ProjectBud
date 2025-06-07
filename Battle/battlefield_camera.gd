@@ -20,6 +20,7 @@ var _is_enabled : bool = false
 func _ready():
 	# Make sure the camera processes even when the game is paused
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	global_position = $"../BattleField".arena_size /2
 
 func _process(delta):
 	if edge_scroll_enabled:

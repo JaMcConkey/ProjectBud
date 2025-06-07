@@ -52,7 +52,8 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 	if _action_manager.submit_action(_current_action,\
 	hub.team_owner,):
 		return true
-	_action_in_progress
+	#If submit fails, no longer in progress
+	_action_in_progress = false
 	return false
 
 func start_targeting() -> void:
@@ -73,6 +74,8 @@ func set_target(action : GameAction, new_target : Variant) -> void:
 		_current_target = new_target
 		action_updated.emit()
 	_update_target_line()
+	#Try to execut after setting target
+	execute_action()
 
 func clear_target() -> void:
 	"""Clears current target for Hub Comp AND action"""
@@ -91,13 +94,12 @@ func _update_target_line():
 	if _current_target != null:
 		_tar_line.points = [Vector2.ZERO,to_local(_current_target.global_position)]
 	else:
-		_tar_line.points = []
+		_tar_line.clear_points()
 func _cache_action() -> void:
 	"""Cache the current action and validate any existing target."""
 	_current_action = get_action()
 	if _current_action and _current_target:
 		if not _current_action.is_valid_target(_current_target):
-			push_error("GFGFG")
 			_current_target = null
 	action_updated.emit()
 	component_updated.emit()

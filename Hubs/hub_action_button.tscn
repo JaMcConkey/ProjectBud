@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://d2tyer23pgqbs"]
+[gd_scene load_steps=8 format=3 uid="uid://d2tyer23pgqbs"]
 
 [ext_resource type="Script" uid="uid://bybdv1wnqll5h" path="res://Hubs/hub_action_button.gd" id="1_ob7bj"]
 [ext_resource type="Shader" uid="uid://c5mwkqxppvb4y" path="res://Shaders/glowystuff.gdshader" id="2_hs12t"]
 [ext_resource type="Texture2D" uid="uid://46d4grhwblkv" path="res://Art/Icons/send_inf.png" id="3_efb7j"]
+[ext_resource type="Texture2D" uid="uid://b6464ieaq7qxc" path="res://Art/Icons/targeted.png" id="4_0kmd0"]
+[ext_resource type="Texture2D" uid="uid://b0a6w8thn32g3" path="res://Art/Icons/cancel.png" id="5_5fpwa"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0kmd0"]
 shader = ExtResource("2_hs12t")
@@ -98,11 +100,11 @@ grow_vertical = 0
 [node name="Set Target" type="Button" parent="Expanded Panel/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-icon = ExtResource("3_efb7j")
+icon = ExtResource("4_0kmd0")
 expand_icon = true
 
 [node name="Clear Target" type="Button" parent="Expanded Panel/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-icon = ExtResource("3_efb7j")
+icon = ExtResource("5_5fpwa")
 expand_icon = true

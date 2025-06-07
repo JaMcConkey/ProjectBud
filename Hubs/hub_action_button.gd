@@ -1,7 +1,7 @@
 extends Button
 class_name HubActionButton
 
-signal hub_action_button_pressed(button : HubActionButton)
+signal hub_action_button_toggled(button : HubActionButton, state : bool)
 
 @export var highlight: TextureRect
 @export var action_icon: TextureRect
@@ -19,9 +19,10 @@ var active : bool :
 		active = v
 
 func set_component(p_hub_comp : HubComponent):
+	hub_comp = p_hub_comp
 	toggle_mode = true
 	toggled.connect(_on_toggle)
-	hub_comp = p_hub_comp
+	toggle_auto_fire.set_pressed_no_signal(hub_comp._auto_execute_enabled)
 	#pressed.connect(_on_pressed)
 	_connect_signals()
 	update_display()
@@ -29,16 +30,17 @@ func _connect_signals():
 	hub_comp.action_updated.connect(update_display)
 	toggle_auto_fire.toggled.connect(on_auto_fire_toggled)
 	set_target_button.pressed.connect(_on_set_target_pressed)
+	clear_target_button.pressed.connect(_on_clear_target_pressed)
 	
 func update_display():
 	var action : HubAction
 	action = hub_comp.get_action()
 	if action:
 		action_icon.texture = action.icon
-		#if action.can_start():
-			#disabled = false
-		#else:
-			#disabled = true
+		if action.can_start():
+			set_target_button.disabled = false
+		else:
+			set_target_button.disabled = true
 	else:
 		push_warning("No action assigned here, why is there a button")
 func _on_set_target_pressed():
@@ -56,6 +58,8 @@ func _on_pressed():
 	pass
 	#hub_action_button_pressed.emit(self)
 func _on_toggle(toggled_on : bool):
-	print("PRESSED")
+	if toggled_on:
+		hub_action_button_toggled.emit(self,toggled_on)
 	expand_panel.visible = toggled_on
 	highlight.visible = toggled_on
+	
