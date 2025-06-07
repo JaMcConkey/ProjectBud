@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 func start_battle():
 	hub_controller.setup_hub_controller(self)
 
-func _action_started(action : GameAction):
+func _action_started(action : GameAction, _requester_id : String):
 	_set_mode(STATE.TargetSelection)
 	#NOTE Make sure to clear old action stuffs
 	_clear_selection()

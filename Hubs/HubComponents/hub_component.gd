@@ -49,8 +49,7 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 		return false
 		
 	_action_in_progress = true
-	if _action_manager.submit_action(_current_action,\
-	hub.team_owner,):
+	if _action_manager.submit_action(_current_action):
 		return true
 	#If submit fails, no longer in progress
 	_action_in_progress = false
@@ -60,10 +59,15 @@ func start_targeting() -> void:
 	"""Calls action manager to start setting a target"""
 	if get_action() == null:
 		return
-	_action_manager.request_target_for_action(get_action())
-	if not _action_manager.target_selected.is_connected(set_target):
-		_action_manager.target_selected.connect(set_target)
+	if _action_manager.request_target_for_action(get_action(),str(get_instance_id())):
+		if _action_manager.target_provided.is_connected(_on_action_manager_provide_target):
+			_action_manager.target_provided.connect(_on_action_manager_provide_target)
 	pass
+
+func _on_action_manager_provide_target(action : GameAction, target : Variant, id : String):
+	if id != str(get_instance_id()):
+		return
+	set_target(action,target)
 
 func set_target(action : GameAction, new_target : Variant) -> void:
 	"""Set a new target for the action if valid."""
