@@ -2,7 +2,7 @@ extends HubAction
 class_name AttackHubAction
 
 func _init(source: Hub, attack_comp : AttackComponent):
-	super("Send Influence", null, "send_influence", source, true, attack_comp.attack_cost)
+	super("Hub Attack", null, "attack", source, true, attack_comp.attack_cost)
 
 	requires_target = true
 

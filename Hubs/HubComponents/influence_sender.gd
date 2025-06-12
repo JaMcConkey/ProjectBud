@@ -43,3 +43,13 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 	if get_send_value() <= 0:
 		return false
 	return super.execute_action(ignore_cooldown)
+func increase(step = 1):
+	"""
+	Attemps to increase the send value(And Cost) by the step size
+	"""
+	set_send_value(get_send_value() + step)
+func decrease(step = 1):
+	"""
+	Attemps to increase the send value(And Cost) by the step size
+	"""
+	set_send_value(get_send_value() + step)

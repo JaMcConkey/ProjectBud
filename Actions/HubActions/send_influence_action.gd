@@ -19,11 +19,13 @@ func set_send_amount(val : int):
 	influence_amount = val
 	cost = val
 
+func get_influence_blob_size() -> int:
+	return influence_amount
 func execute() -> bool:
 	if not super.execute():
 		print("Send INF action failed to execute")
 		return false
-	_inf_man.send_influence(source_hub,target_hub,influence_amount)
+	_inf_man.send_influence(source_hub,target_hub,get_influence_blob_size())
 	return true
 
 func is_valid_target(target) -> bool:

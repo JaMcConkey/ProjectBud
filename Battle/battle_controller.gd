@@ -32,7 +32,7 @@ func _ready() -> void:
 	start_battle()
 	game_context = GameContext.new(self)
 	_cur_mode = STATE.Idle
-	action_manager.target_required.connect(_action_started)
+	action_manager.target_requested.connect(_targeting_started)
 	#action_manager.action_completed.connect(_action_ended)
 	#action_manager.action_failed.connect(_action_ended)
 
@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 func start_battle():
 	hub_controller.setup_hub_controller(self)
 
-func _action_started(action : GameAction, _requester_id : String):
+func _targeting_started(action : GameAction, _requester_id : String):
 	_set_mode(STATE.TargetSelection)
 	#NOTE Make sure to clear old action stuffs
 	_clear_selection()
@@ -76,7 +76,7 @@ func _input(event: InputEvent) -> void:
 	# Escape to idle for now
 	if event.is_action_pressed("ui_cancel"):
 		if _cur_mode != STATE.Idle:
-			action_manager.cancel_current_player_action()
+			action_manager.cancel_target_request()
 			_clear_selection()
 			_set_mode(STATE.Idle)
 
@@ -88,14 +88,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		_handle_left_click_up()
 	if event.is_action_pressed("ScrollDown"):
 		if selected_hub:
-			for comp in selected_hub.get_hub_components():
-				if comp is InfluenceSender:
-					comp.set_send_value(comp.get_send_value() - 1)
+			var active_comp = selected_hub.hub_ui.get_active_component()
+			if active_comp != null:
+				active_comp.decrease()
+			#for comp in selected_hub.get_hub_components():
+				#if comp is InfluenceSender:
+					#comp.set_send_value(comp.get_send_value() - 1)
 	if event.is_action_pressed("ScrollUp"):
 		if selected_hub:
-			for comp in selected_hub.get_hub_components():
-				if comp is InfluenceSender:
-					comp.set_send_value(comp.get_send_value() + 1)
+			var active_comp = selected_hub.hub_ui.get_active_component()
+			if active_comp != null:
+				active_comp.increase()
+			#for comp in selected_hub.get_hub_components():
+				#if comp is InfluenceSender:
+					#comp.set_send_value(comp.get_send_value() + 1)
 func _handle_left_click_down():
 	is_dragging = true
 	match _cur_mode:

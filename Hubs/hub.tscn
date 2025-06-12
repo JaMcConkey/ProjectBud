@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dxlqwue3i8yg"]
+[gd_scene load_steps=12 format=3 uid="uid://dxlqwue3i8yg"]
 
 [ext_resource type="Script" uid="uid://cnb60yyc0nem1" path="res://Hubs/hub.gd" id="1_04o0g"]
 [ext_resource type="Shader" uid="uid://c5mwkqxppvb4y" path="res://Shaders/glowystuff.gdshader" id="1_ly8ps"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://d2tyer23pgqbs" path="res://Hubs/hub_action_button.tscn" id="4_pixk4"]
 [ext_resource type="PackedScene" uid="uid://d0a5k7wrlqkf8" path="res://hub_ui.tscn" id="5_04o0g"]
 [ext_resource type="Script" uid="uid://cv0wdnr1y75aa" path="res://Hubs/hub_collider.gd" id="5_ly8ps"]
+[ext_resource type="Script" uid="uid://cr318qx1wk1fj" path="res://Hubs/hub_action_controller.gd" id="7_5hrge"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5hrge"]
 
@@ -64,6 +65,9 @@ offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
+
+[node name="HubActionController" type="Node" parent="."]
+script = ExtResource("7_5hrge")
 
 [connection signal="mouse_entered" from="HubCollider" to="." method="_on_area_2d_mouse_entered"]
 [connection signal="mouse_exited" from="HubCollider" to="." method="_on_area_2d_mouse_exited"]

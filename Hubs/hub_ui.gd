@@ -99,3 +99,5 @@ func show_actions():
 
 func hide_actions():
 	action_holder.hide()
+func get_active_component() -> HubComponent:
+	return _active_component

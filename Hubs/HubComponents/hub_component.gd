@@ -21,12 +21,24 @@ func init_component(p_hub: Hub) -> void:
 	_auto_execute_enabled = true
 	_cache_action()  # Cache action on init
 	_tar_line = Line2D.new()
+	_tar_line.z_index = -1
 	add_child(_tar_line)
 	_tar_line.show_behind_parent = true
 	_action_manager.action_completed.connect(_on_action_completed)
 
 func toggle_auto_fire(val : bool):
 	_auto_execute_enabled = val
+
+func increase(step = 1):
+	"""
+	Will vary based on child, parent does nothing
+	"""
+	pass
+func decrease(step = 1):
+	"""
+	Will vary based on child, parent does nothing
+	"""
+	pass
 
 func get_action() -> GameAction:
 	"""Returns the current action, or null if none exists."""
@@ -60,7 +72,7 @@ func start_targeting() -> void:
 	if get_action() == null:
 		return
 	if _action_manager.request_target_for_action(get_action(),str(get_instance_id())):
-		if _action_manager.target_provided.is_connected(_on_action_manager_provide_target):
+		if not _action_manager.target_provided.is_connected(_on_action_manager_provide_target):
 			_action_manager.target_provided.connect(_on_action_manager_provide_target)
 	pass
 
@@ -78,8 +90,6 @@ func set_target(action : GameAction, new_target : Variant) -> void:
 		_current_target = new_target
 		action_updated.emit()
 	_update_target_line()
-	#Try to execut after setting target
-	execute_action()
 
 func clear_target() -> void:
 	"""Clears current target for Hub Comp AND action"""

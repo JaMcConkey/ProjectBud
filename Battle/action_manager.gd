@@ -1,61 +1,77 @@
 extends Node
 class_name ActionManager
 
-signal target_required(action, requester_id)
-signal target_provided(action, target, requester_id)
-signal action_completed(action)
-signal action_failed(action, reason)
-signal action_cancelled(action)
+signal target_requested(action, requester_id)  # Emitted when an action needs a target
+signal target_provided(action, target, requester_id)  # Emitted when a valid target is given
+signal action_completed(action)  # Emitted when execution succeeds
+signal action_failed(action, reason)  # Emitted when execution fails
+signal action_cancelled(action)  # Emitted when a pending action is cancelled
 
-var current_action: GameAction = null
-var current_requester_id: String = ""
+var pending_action: GameAction = null  # Only one action can wait for a target at a time
+var pending_requester_id: String = ""  # Who requested the target?
+var executing_action: GameAction = null  # Currently executing action (blocks new execution)
 
+# Submit an action for immediate execution (fails if target is missing)
 func submit_action(action: GameAction) -> bool:
-	if current_action:
-		cancel_current_action()
-	
-	current_action = action
-	
-	if action.requires_target:
-		target_required.emit(action, "direct")
-		return true
-	else:
-		return _execute_action(action)
+	if action.requires_target and not action.has_valid_target():
+		action_failed.emit(action, "No target provided")
+		return false
+	return _execute_action(action)
 
-# NEW: For hub components to request targets
-func request_target_for_action(action: GameAction, requester_id: String) -> bool:
+# Request a target for an action (cancels any existing request)
+func request_target_for_action(action: GameAction, requester_id: String = "default") -> bool:
 	if not action.requires_target:
 		return false
 	
-	# Handle existing action
-	if current_action:
-		cancel_current_action()
+	# Cancel any existing pending action
+	if pending_action:
+		var cancelled_action = pending_action
+		cancelled_action.clear_target()
+		action_cancelled.emit(cancelled_action)
 	
-	current_action = action
-	current_requester_id = requester_id
-	target_required.emit(action, requester_id)
+	# Set new pending action
+	pending_action = action
+	pending_requester_id = requester_id
+	target_requested.emit(action, requester_id)
 	return true
 
+# Provide a target to the pending action (if valid)
 func provide_target(target) -> bool:
-	if not current_action:
+	if not pending_action:
 		return false
 	
-	if current_action.set_target(target):
-		target_provided.emit(current_action, target, current_requester_id)
-		return _execute_action(current_action)
+	if not pending_action.is_valid_target(target):
+		return false
+	
+	if pending_action.set_target(target):
+		var action = pending_action
+		var requester_id = pending_requester_id
+		pending_action = null
+		pending_requester_id = ""
+		target_provided.emit(action, target, requester_id)
+		return _execute_action(action)
+	
 	return false
 
-func cancel_current_action():
-	if current_action:
-		current_action.clear_target()
-		action_cancelled.emit(current_action)
-		current_action = null
-		current_requester_id = ""
+# Cancel the current target request (if any)
+func cancel_target_request() -> bool:
+	if not pending_action:
+		return false
+	
+	var action = pending_action
+	action.clear_target()
+	pending_action = null
+	pending_requester_id = ""
+	action_cancelled.emit(action)
+	return true
 
+# Execute an action (internal use only)
 func _execute_action(action: GameAction) -> bool:
+	executing_action = action
+	
 	if not action.can_execute():
 		action_failed.emit(action, "Cannot execute")
-		_clear_current()
+		executing_action = null
 		return false
 	
 	var success = action.execute()
@@ -65,9 +81,15 @@ func _execute_action(action: GameAction) -> bool:
 	else:
 		action_failed.emit(action, "Execution failed")
 	
-	_clear_current()
+	executing_action = null
 	return success
 
-func _clear_current():
-	current_action = null
-	current_requester_id = ""
+# Utility functions
+func is_waiting_for_target() -> bool:
+	return pending_action != null
+
+func get_pending_action() -> GameAction:
+	return pending_action
+
+func is_executing() -> bool:
+	return executing_action != null
