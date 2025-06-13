@@ -32,6 +32,8 @@ func place_hub(pos : Vector2):
 		var inf_r = InfluenceReceiver.new()
 		var inf_p = InfluenceProducer.new()
 		var hp_comp = HealthComponent.new()
+		
+		
 		hp_comp.max_health = 50
 		hp_comp.cur_health = 20
 		hub.add_hub_component(hp_comp)
@@ -40,6 +42,9 @@ func place_hub(pos : Vector2):
 		hub.add_hub_component(inf_r)
 		hub.apply_influence(50,Team.new())
 		hub.set_team(_battle_controller.teams.pick_random())
+		
+		var inf_s_2 = InfluenceSender.new()
+		hub.add_hub_component(inf_s_2)
 	else:
 		push_error("Scene wasn't a hub???")
 		return

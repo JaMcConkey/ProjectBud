@@ -6,18 +6,22 @@ const icon_preload = preload("res://Art/Icons/send_inf.png")
 var influence_amount: int 
 var _inf_man : InfluenceManager
 
-func _init(source: Hub, amount: int):	
-	super("Send Influence", icon_preload, "send_influence",source.team_owner, source, true, amount)
+func _init(source_hub : Hub, amount: int):
+	super(source_hub)
+	_setup_action()
 	set_send_amount(amount)
+	_inf_man = source_hub.battle_controller.influence_Manager
+func _setup_action():
+	icon = icon_preload
+	action_name = "Send Influence"
 	requires_target = true
-	_inf_man = source.battle_controller.influence_Manager
-
-func set_send_amount(val : int):
+func set_send_amount(val : int,match_cost : bool = true):
 	"""
 	By Default, COST and SEND amount will be equal
 	"""
 	influence_amount = val
-	cost = val
+	if match_cost:
+		cost = val
 
 func get_influence_blob_size() -> int:
 	return influence_amount

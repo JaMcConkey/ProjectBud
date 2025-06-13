@@ -18,4 +18,4 @@ func _process(_delta: float) -> void:
 	if bc.selected_hub:
 		for comp in bc.selected_hub.get_hub_components():
 			if comp is InfluenceSender:
-				$".".text += "SEND VAL  = " + str(comp.get_send_value())
+				$".".text += "SEND VAL  = " + str(comp.pending_send_val)

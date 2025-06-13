@@ -18,7 +18,7 @@ shader_parameter/intensity = 1.0
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5fpwa"]
 
-[node name="Button" type="Button" node_paths=PackedStringArray("highlight", "action_icon", "set_target_button", "clear_target_button", "toggle_auto_fire", "expand_panel")]
+[node name="Button" type="Button" node_paths=PackedStringArray("prog_bar", "highlight", "action_icon", "set_target_button", "clear_target_button", "toggle_auto_fire", "expand_panel")]
 custom_minimum_size = Vector2(32, 32)
 anchors_preset = -1
 anchor_right = 0.017
@@ -29,6 +29,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 toggle_mode = true
 script = ExtResource("1_ob7bj")
+prog_bar = NodePath("TextureProgressBar")
 highlight = NodePath("Highlight")
 action_icon = NodePath("Icon")
 set_target_button = NodePath("Expanded Panel/HBoxContainer/Set Target")
@@ -48,7 +49,6 @@ offset_bottom = 1.0
 grow_horizontal = 2
 
 [node name="Highlight" type="TextureRect" parent="."]
-visible = false
 material = SubResource("ShaderMaterial_0kmd0")
 layout_mode = 1
 anchors_preset = 15
@@ -60,7 +60,23 @@ mouse_filter = 2
 texture = SubResource("PlaceholderTexture2D_5fpwa")
 expand_mode = 1
 
+[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+step = 0.1
+value = 32.9
+fill_mode = 2
+nine_patch_stretch = true
+texture_under = ExtResource("3_efb7j")
+texture_progress = ExtResource("3_efb7j")
+tint_under = Color(0.453232, 0.453232, 0.453232, 1)
+
 [node name="Icon" type="TextureRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

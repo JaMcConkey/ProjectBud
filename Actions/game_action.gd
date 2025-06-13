@@ -10,9 +10,8 @@ enum TARGET_TYPE{
 	HUB
 }
 
-var name: String
+var action_name: String
 var icon: Texture2D
-var action_type: String  #Maybe swap to enum? Not sure
 var source_team : Team
 var cost: int = 0 #Generic cost, sub classes will decide what it's for
 var requires_target: bool = false
@@ -21,14 +20,14 @@ var target_hub: Hub = null  # Optional, for hub-to-hub actions
 
 var target_position: Vector2 = Vector2.ZERO  
 
-func _init(p_name: String, p_icon: Texture2D, p_type: String, p_team : Team, p_requires_target: bool = false, p_cost: int = 0):
-	name = p_name
-	icon = p_icon
-	action_type = p_type
-	requires_target = p_requires_target
-	cost = p_cost
+func _init(p_team : Team):
 	source_team = p_team
-
+	_setup_action()
+func _setup_action():
+	"""Initlaize values like icon, etc"""
+	push_error("This should be overriden by child class")
+func set_cost(new_value):
+	cost = new_value
 func can_start() -> bool:
 	"""Checks if an action can be started"""
 	return true

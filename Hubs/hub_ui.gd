@@ -93,9 +93,9 @@ func _on_toggled(button : HubActionButton, state : bool):
 			continue
 		h_button.button_pressed = false
 func show_actions():
-	action_holder.show()
 	for c_button in hub_action_buttons:
 		c_button.toggle_actions(false)
+	action_holder.show()
 
 func hide_actions():
 	action_holder.hide()

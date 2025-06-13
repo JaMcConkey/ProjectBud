@@ -19,7 +19,7 @@ func init_component(p_hub: Hub) -> void:
 	hub = p_hub
 	_action_manager = hub.battle_controller.action_manager
 	_auto_execute_enabled = true
-	_cache_action()  # Cache action on init
+	#_cache_action()  # Cache action on init
 	_tar_line = Line2D.new()
 	_tar_line.z_index = -1
 	add_child(_tar_line)
@@ -29,6 +29,13 @@ func init_component(p_hub: Hub) -> void:
 func toggle_auto_fire(val : bool):
 	_auto_execute_enabled = val
 
+func set_cooldown(new_cd : float):
+	"""
+	Set's cooldown for the action
+	"""
+	action_cooldown = new_cd
+func get_cd_time_remaining() -> float:
+	return _cooldown_timer
 func increase(step = 1):
 	"""
 	Will vary based on child, parent does nothing
@@ -59,6 +66,8 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 		
 	if !_current_action.can_start():
 		return false
+	if _action_in_progress:
+		return false
 		
 	_action_in_progress = true
 	if _action_manager.submit_action(_current_action):
@@ -80,6 +89,7 @@ func _on_action_manager_provide_target(action : GameAction, target : Variant, id
 	if id != str(get_instance_id()):
 		return
 	set_target(action,target)
+	_update_action()
 
 func set_target(action : GameAction, new_target : Variant) -> void:
 	"""Set a new target for the action if valid."""
@@ -96,8 +106,14 @@ func clear_target() -> void:
 	_current_target = null
 	get_action().clear_target()
 	_update_target_line()
+func ui_set_active(val : bool):
+	"""
+	Called by the ui to inform if active
+	"""
+	if val:
+		pass
+	pass
 func _process(delta: float) -> void:
-	"""Handle cooldowns and auto-execution."""
 	_update_cooldowns(delta)
 	if _auto_execute_enabled and not _action_in_progress:
 		_try_auto_execute(delta)
@@ -109,14 +125,12 @@ func _update_target_line():
 		_tar_line.points = [Vector2.ZERO,to_local(_current_target.global_position)]
 	else:
 		_tar_line.clear_points()
-func _cache_action() -> void:
-	"""Cache the current action and validate any existing target."""
-	_current_action = get_action()
-	if _current_action and _current_target:
-		if not _current_action.is_valid_target(_current_target):
-			_current_target = null
-	action_updated.emit()
-	component_updated.emit()
+
+func _update_action() -> bool:
+	"""
+	Child should override, this is where you should update action parameters
+	"""
+	return true
 
 func _update_cooldowns(delta: float) -> void:
 	"""Update all cooldown timers."""

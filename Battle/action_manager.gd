@@ -77,6 +77,8 @@ func _execute_action(action: GameAction) -> bool:
 	var success = action.execute()
 	
 	if success:
+		if executing_action is HubAction:
+			executing_action.source_hub.consume_influence(executing_action.cost)
 		action_completed.emit(action)
 	else:
 		action_failed.emit(action, "Execution failed")

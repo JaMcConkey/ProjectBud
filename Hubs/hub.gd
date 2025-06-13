@@ -5,7 +5,7 @@ signal hub_state_changed()
 signal hub_components_updated()
 
 @export var hub_ui : HubUI
-
+@export var targetable_sprite : Sprite2D
 #Action Stuff
 @export var action_holder : Control
 @export var action_h_box : HBoxContainer
@@ -73,9 +73,9 @@ func apply_influence(amount, team : Team):
 		if _cur_influence < 0:
 			_cur_influence = abs(_cur_influence)
 			set_team(team)
-func take_blob_influence(amount : int) -> bool:
+func consume_influence(amount : int) -> bool:
 	if _cur_influence < amount:
-		push_error("Tried to get blob influence with not enough influence")
+		push_error("Tried to consume influence with not enough influence")
 		return false
 	_cur_influence -= amount
 	return true
@@ -97,3 +97,9 @@ func add_hub_component(hub_component : HubComponent):
 func set_team(team : Team):
 	team_owner = team
 	$Sprite.modulate = team.team_color
+
+func toggle_targetable_icon(state : bool):
+	if state:
+		targetable_sprite.show()
+	else:
+		targetable_sprite.hide()

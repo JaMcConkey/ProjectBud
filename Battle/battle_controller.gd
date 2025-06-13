@@ -50,8 +50,12 @@ func _targeting_started(action : GameAction, _requester_id : String):
 	if action is HubAction:
 		action.source_hub.select_node()
 		selected_hub = action.source_hub
+		for hub in hub_controller.get_all_hubs():
+				hub.toggle_targetable_icon(action.is_valid_target(hub))
 
 func _action_ended(_action : GameAction):
+	for hub in hub_controller.get_all_hubs():
+		hub.toggle_targetable_icon(false)
 	_set_mode(STATE.Idle)
 	_clear_selection()
 
@@ -67,6 +71,7 @@ func _clear_selection():
 		selected_hub = null
 	for hub in hub_controller.get_all_hubs():
 		hub.deselect_node()
+		hub.toggle_targetable_icon(false)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed('test'):

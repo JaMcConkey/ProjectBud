@@ -83,3 +83,11 @@ influence_blob_scene = ExtResource("10_p74yl")
 
 [node name="ActionManager" type="Node" parent="."]
 script = ExtResource("10_7dd3t")
+
+[node name="BattleUI" type="CanvasLayer" parent="."]
+
+[node name="TargetingUI" type="Control" parent="BattleUI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
