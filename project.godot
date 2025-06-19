@@ -62,3 +62,5 @@ camera_toggle={
 2d_physics/layer_2="Hubs"
 2d_physics/layer_3="PlayerBlobs"
 2d_physics/layer_4="EnemyBlobs"
+2d_physics/layer_5="Projectiles"
+2d_physics/layer_6="Beams"

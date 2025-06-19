@@ -1,10 +1,7 @@
 extends HubComponent
 class_name InfluenceSender
 var _send_value: int = 0
-var pending_send_val = 0 :
-	set(v):
-		clampi(v,0,hub.max_influence)
-		pending_send_val = v
+
 func init_component(p_hub: Hub) -> void:
 	super.init_component(p_hub)
 	#_update_max_send_value()  # Initialize with current influence
@@ -18,16 +15,11 @@ func set_send_value(amount: int) -> void:
 		_current_action.set_send_amount(_send_value)
 	action_updated.emit()
 
-func start_targeting() -> void:
+func start_targeting() -> bool:
 	#var act = get_action() as SendInfluenceAction
 	#pending_send_val = act.get_influence_blob_size()
-	super()
+	return super()
 
-func get_send_value() -> int:
-	"""Returns the current send value, ensuring it doesn't exceed available influence."""
-	#_update_max_send_value()
-	_send_value = clampi(_send_value, 0, hub.get_current_influence())
-	return _send_value
 
 func get_action() -> GameAction:
 	"""Returns a configured SendInfluenceAction, creating if necessary."""
@@ -37,7 +29,7 @@ func get_action() -> GameAction:
 		component_updated.emit()
 	return _current_action
 func _update_action() -> bool:
-	set_send_value(pending_send_val)
+	set_send_value(_pending_cost)
 	return super()
 #func _update_max_send_value() -> void:
 	#"""Update the cached maximum sendable value."""
@@ -56,18 +48,19 @@ func increase(step = 1):
 	"""
 	Attemps to increase the pending send value(And Cost) by the step size
 	"""
-	pending_send_val += step
+	_pending_cost += step
+	_pending_cost = clampi(_pending_cost,0,hub.max_influence)
 
 func decrease(step = 1):
 	"""
 	Attemps to increase the pending send value(And Cost) by the step size
 	"""
-	var new_val = pending_send_val - step
-	pending_send_val = clampi(new_val,0,hub.max_influence)
+	_pending_cost -= step
+	_pending_cost = clampi(_pending_cost,0,hub.max_influence)
 func ui_set_active(val : bool):
 	"""
-	Called by the ui to inform if active
+	Called by the ui to inform if active - Preset pending cost here
 	"""
 	if val:
-		pending_send_val = get_action().get_influence_blob_size()
+		_pending_cost = get_action().get_influence_blob_size()
 	pass

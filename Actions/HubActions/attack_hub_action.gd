@@ -1,10 +1,17 @@
 extends HubAction
-class_name AttackHubAction
+class_name AttackAction
+
+enum ATTACK_TYPE{
+	PROJECTILE,
+	BEAM
+}
 
 func _init(source: Hub, attack_comp : AttackComponent):
-	super("Hub Attack", null, "attack", source, true, attack_comp.attack_cost)
-
+	super(source)
 	requires_target = true
+	if source.team_owner.is_ai:
+		#Set collisions on projectile to player
+		pass
 
 func execute() -> bool:
 	if not super.execute():

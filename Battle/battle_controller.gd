@@ -46,9 +46,14 @@ func start_battle():
 func _targeting_started(action : GameAction, _requester_id : String):
 	_set_mode(STATE.TargetSelection)
 	#NOTE Make sure to clear old action stuffs
-	_clear_selection()
+	#_clear_selection()
 	if action is HubAction:
-		action.source_hub.select_node()
+		for hub in hub_controller.get_all_hubs():
+			if hub == action.source_hub:
+				continue
+			hub.deselect_node()
+			hub.toggle_targetable_icon(false)
+		#action.source_hub.select_node()
 		selected_hub = action.source_hub
 		for hub in hub_controller.get_all_hubs():
 				hub.toggle_targetable_icon(action.is_valid_target(hub))
@@ -96,17 +101,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			var active_comp = selected_hub.hub_ui.get_active_component()
 			if active_comp != null:
 				active_comp.decrease()
-			#for comp in selected_hub.get_hub_components():
-				#if comp is InfluenceSender:
-					#comp.set_send_value(comp.get_send_value() - 1)
+
 	if event.is_action_pressed("ScrollUp"):
 		if selected_hub:
 			var active_comp = selected_hub.hub_ui.get_active_component()
 			if active_comp != null:
 				active_comp.increase()
-			#for comp in selected_hub.get_hub_components():
-				#if comp is InfluenceSender:
-					#comp.set_send_value(comp.get_send_value() + 1)
 func _handle_left_click_down():
 	is_dragging = true
 	match _cur_mode:

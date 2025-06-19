@@ -14,12 +14,12 @@ var _auto_execute_enabled: bool = false
 var _action_in_progress: bool = false
 var _action_manager : ActionManager
 var _tar_line : Line2D
+var _pending_cost : int
 func init_component(p_hub: Hub) -> void:
 	"""Initialize the component with its parent Hub."""
 	hub = p_hub
 	_action_manager = hub.battle_controller.action_manager
 	_auto_execute_enabled = true
-	#_cache_action()  # Cache action on init
 	_tar_line = Line2D.new()
 	_tar_line.z_index = -1
 	add_child(_tar_line)
@@ -46,7 +46,19 @@ func decrease(step = 1):
 	Will vary based on child, parent does nothing
 	"""
 	pass
-
+func get_cost() -> int:
+	"""
+	Returns the cost of the current active action
+	"""
+	if get_action() == null:
+		return 0
+	return get_action().cost
+func get_pending_cost() -> int:
+	"""
+	Returns the pending cost of the action (I.E increasing influence before 
+	sending)
+	"""
+	return _pending_cost
 func get_action() -> GameAction:
 	"""Returns the current action, or null if none exists."""
 	return _current_action
@@ -76,14 +88,14 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 	_action_in_progress = false
 	return false
 
-func start_targeting() -> void:
-	"""Calls action manager to start setting a target"""
-	if get_action() == null:
-		return
+func start_targeting() -> bool:
+	"""Calls action manager to start setting a target if one is required """
+	if get_action() == null or !_current_action.requires_target:
+		return false
 	if _action_manager.request_target_for_action(get_action(),str(get_instance_id())):
 		if not _action_manager.target_provided.is_connected(_on_action_manager_provide_target):
 			_action_manager.target_provided.connect(_on_action_manager_provide_target)
-	pass
+	return true
 
 func _on_action_manager_provide_target(action : GameAction, target : Variant, id : String):
 	if id != str(get_instance_id()):
@@ -113,6 +125,9 @@ func ui_set_active(val : bool):
 	if val:
 		pass
 	pass
+
+func has_valid_target() -> bool:
+	return _current_action and _current_action.has_valid_target()
 func _process(delta: float) -> void:
 	_update_cooldowns(delta)
 	if _auto_execute_enabled and not _action_in_progress:

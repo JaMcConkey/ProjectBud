@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="HubBlueprint" load_steps=2 format=3 uid="uid://bs7ev4ei8fx8j"]
+
+[ext_resource type="Script" uid="uid://bvcgvo3vd0bwy" path="res://Hubs/hub_blueprint.gd" id="1_t8itr"]
+
+[resource]
+script = ExtResource("1_t8itr")
+max_influence = 30
+can_send_influence = false
+can_recieve_influence = false
+influence_production_speed = 0.0
+can_attack = false
+can_shield = false
+metadata/_custom_type_script = "uid://bvcgvo3vd0bwy"

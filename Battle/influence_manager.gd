@@ -22,6 +22,7 @@ func send_influence(send_hub : Hub,target_hub : Hub,send_amount : int):
 	if can_send_influence(send_hub) and can_receive_influence(target_hub)\
 	and send_amount > 0:
 		var blob = influence_blob_scene.instantiate() as InfluenceBlob
+		blob.set_team(send_hub.team_owner)
 		#Add sending hub to ignore list
 		blob.ignore_hub(send_hub)
 		#Connect signals
@@ -51,6 +52,8 @@ func merge_influence_blob_to_hub(blob : InfluenceBlob,receiving_hub : Hub):
 	receiving_hub.apply_influence(blob.influence_value,blob.get_team())
 	remove_blob(blob)
 func blob_on_blob(blob_a : InfluenceBlob,blob_b:InfluenceBlob):
+	if blob_a.get_team() == blob_b.get_team():
+		return
 	var dif = blob_a.influence_value - blob_b.influence_value
 	if dif == 0:
 		remove_blob(blob_a)

@@ -3,6 +3,7 @@ extends Resource
 class_name GameAction
 
 signal target_updated(target)
+signal cost_updated(new_cost : int)
 
 enum TARGET_TYPE{
 	NONE,
@@ -20,6 +21,8 @@ var target_hub: Hub = null  # Optional, for hub-to-hub actions
 
 var target_position: Vector2 = Vector2.ZERO  
 
+var _max_cost : int
+
 func _init(p_team : Team):
 	source_team = p_team
 	_setup_action()
@@ -28,10 +31,17 @@ func _setup_action():
 	push_error("This should be overriden by child class")
 func set_cost(new_value):
 	cost = new_value
+	cost_updated.emit(cost)
 func can_start() -> bool:
 	"""Checks if an action can be started"""
 	return true
-
+func get_max_cost() -> int:
+	return _max_cost
+func get_cost() -> int:
+	"""
+	Returns the cost (Influence for HubActions normally)
+	"""
+	return cost
 func can_execute() -> bool:
 	"""
 	Checks if action meets ALL requirements to execute

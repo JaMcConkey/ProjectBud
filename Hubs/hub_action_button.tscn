@@ -27,7 +27,6 @@ offset_right = -0.640003
 offset_bottom = -0.400002
 size_flags_horizontal = 4
 size_flags_vertical = 4
-toggle_mode = true
 script = ExtResource("1_ob7bj")
 prog_bar = NodePath("TextureProgressBar")
 highlight = NodePath("Highlight")
@@ -49,6 +48,7 @@ offset_bottom = 1.0
 grow_horizontal = 2
 
 [node name="Highlight" type="TextureRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_0kmd0")
 layout_mode = 1
 anchors_preset = 15
@@ -90,7 +90,6 @@ texture = ExtResource("3_efb7j")
 expand_mode = 1
 
 [node name="Expanded Panel" type="Control" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -112,8 +111,10 @@ offset_right = 34.0
 offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 0
+alignment = 1
 
 [node name="Set Target" type="Button" parent="Expanded Panel/HBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 icon = ExtResource("4_0kmd0")

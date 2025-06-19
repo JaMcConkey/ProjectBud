@@ -6,6 +6,6 @@
 script = ExtResource("1_sqmx6")
 team_id = 0
 team_name = "Enemy"
-is_ai = false
+is_ai = true
 team_color = Color(0.998002, 0, 0.115583, 1)
 metadata/_custom_type_script = "uid://bu8bjng7hqwhs"

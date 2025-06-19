@@ -19,6 +19,13 @@ var _target : Node2D
 var _ignored_hubs : Array[Hub]
 
 func set_team(team : Team):
+	#Collision layer is set based on is AI team flag
+	if team.is_ai:
+		set_collision_layer_value(4,true)
+		set_collision_mask_value(3,true)
+	else:
+		set_collision_layer_value(3,true)
+		set_collision_mask_value(4,true)
 	_team = team
 func get_team() -> Team:
 	return _team

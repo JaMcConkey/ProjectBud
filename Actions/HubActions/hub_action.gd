@@ -18,6 +18,8 @@ func can_start() -> bool:
 	 cost > 0 and\
 	 source_hub.get_current_influence() >= cost)
 
+
+
 func can_execute() -> bool:
 	if not super.can_execute():
 		return false
@@ -31,6 +33,7 @@ func can_execute() -> bool:
 		#print("required a target, and no target set")
 		return false
 	return true
+
 
 func execute() -> bool:
 	if not super.execute():

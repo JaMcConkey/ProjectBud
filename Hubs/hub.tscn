@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dxlqwue3i8yg"]
+[gd_scene load_steps=15 format=3 uid="uid://dxlqwue3i8yg"]
 
 [ext_resource type="Script" uid="uid://cnb60yyc0nem1" path="res://Hubs/hub.gd" id="1_04o0g"]
 [ext_resource type="Shader" uid="uid://c5mwkqxppvb4y" path="res://Shaders/glowystuff.gdshader" id="1_ly8ps"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bn8rvhwdsek6u" path="res://Art/Icons/targeting.png" id="5_87aa2"]
 [ext_resource type="Script" uid="uid://cv0wdnr1y75aa" path="res://Hubs/hub_collider.gd" id="5_ly8ps"]
 [ext_resource type="Script" uid="uid://cr318qx1wk1fj" path="res://Hubs/hub_action_controller.gd" id="7_5hrge"]
+[ext_resource type="Script" uid="uid://d3b5wpor5vbrq" path="res://Hubs/hub_action_cost_bar.gd" id="9_f71gw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5hrge"]
 
@@ -82,6 +83,24 @@ offset_bottom = 0.0
 
 [node name="HubActionController" type="Node" parent="."]
 script = ExtResource("7_5hrge")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 33.0
+offset_top = -20.0
+offset_right = 73.0
+offset_bottom = 20.0
+script = ExtResource("9_f71gw")
+
+[node name="ProgressBar" type="ProgressBar" parent="Control"]
+layout_mode = 0
+offset_right = 4.0
+offset_bottom = 27.0
+max_value = 30.0
+step = 1.0
+fill_mode = 2
+show_percentage = false
 
 [connection signal="mouse_entered" from="HubCollider" to="." method="_on_area_2d_mouse_entered"]
 [connection signal="mouse_exited" from="HubCollider" to="." method="_on_area_2d_mouse_exited"]

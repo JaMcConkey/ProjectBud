@@ -15,13 +15,14 @@ func _setup_action():
 	icon = icon_preload
 	action_name = "Send Influence"
 	requires_target = true
+	target_type = TARGET_TYPE.HUB
 func set_send_amount(val : int,match_cost : bool = true):
 	"""
 	By Default, COST and SEND amount will be equal
 	"""
 	influence_amount = val
 	if match_cost:
-		cost = val
+		set_cost(val)
 
 func get_influence_blob_size() -> int:
 	return influence_amount
