@@ -9,17 +9,6 @@ func _init(p_source: Hub):
 	source_hub = p_source
 	super(p_source.team_owner)
 
-
-func can_start() -> bool:
-	"""
-	Does not check for a target hub, checks if influence and cost are set
-	"""
-	return ( super.can_execute() and\
-	 cost > 0 and\
-	 source_hub.get_current_influence() >= cost)
-
-
-
 func can_execute() -> bool:
 	if not super.can_execute():
 		return false

@@ -9,11 +9,11 @@ func _process(_delta: float) -> void:
 	am = bc.action_manager
 	if am.pending_action != null and am.pending_action is HubAction:
 		var s_hub = am.pending_action.source_hub as Hub
-		var p_hub = s_hub.hub_ui.get_active_component()
-		if p_hub is InfluenceSender:
-			text = "COST : " + str(p_hub.get_pending_cost())
-		else:
-			text = ""
+		#var p_hub = s_hub.hub_ui.get_active_component()
+		#if p_hub is InfluenceSender:
+			#text = "COST : " + str(p_hub.get_pending_cost())
+		#else:
+			#text = ""
 	else:
 		text = ""
 	#match bc._cur_mode:

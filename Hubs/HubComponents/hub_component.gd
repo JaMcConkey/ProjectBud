@@ -77,8 +77,6 @@ func execute_action(ignore_cooldown: bool = false) -> bool:
 	if _cooldown_timer > 0 and not ignore_cooldown:
 		return false
 		
-	if !_current_action.can_start():
-		return false
 	if _action_in_progress:
 		return false
 		

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://1hnlbgcut4qf"]
+[gd_scene load_steps=21 format=3 uid="uid://1hnlbgcut4qf"]
 
 [ext_resource type="Script" uid="uid://bt36l475x1t2q" path="res://Battle/battle_controller.gd" id="1_tgtdb"]
 [ext_resource type="Script" uid="uid://bu8bjng7hqwhs" path="res://team.gd" id="2_7dd3t"]
@@ -34,12 +34,16 @@ font_size = 32
 [sub_resource type="LabelSettings" id="LabelSettings_uw2cy"]
 font_size = 42
 
-[node name="BattleController" type="Node" node_paths=PackedStringArray("battlefield", "hub_controller", "action_manager", "influence_Manager")]
+[sub_resource type="LabelSettings" id="LabelSettings_thch3"]
+font_size = 30
+
+[node name="BattleController" type="Node" node_paths=PackedStringArray("battlefield", "hub_controller", "action_manager", "influence_Manager", "targeting_UI")]
 script = ExtResource("1_tgtdb")
 battlefield = NodePath("BattleField")
 hub_controller = NodePath("HubController")
 action_manager = NodePath("ActionManager")
 influence_Manager = NodePath("InfluenceManager")
+targeting_UI = NodePath("BattleUI/TargetingUI")
 teams = Array[ExtResource("2_7dd3t")]([ExtResource("3_rl2lk"), ExtResource("4_jah81"), ExtResource("5_uw2cy")])
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -90,7 +94,7 @@ script = ExtResource("10_7dd3t")
 
 [node name="BattleUI" type="CanvasLayer" parent="."]
 
-[node name="TargetingUI" type="Control" parent="BattleUI"]
+[node name="TargetingUI" type="Control" parent="BattleUI" node_paths=PackedStringArray("st_label", "cost_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -99,8 +103,11 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("16_uw2cy")
+st_label = NodePath("Label")
+cost_label = NodePath("Cost")
 
 [node name="Label" type="Label" parent="BattleUI/TargetingUI"]
+visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -111,3 +118,18 @@ offset_bottom = 23.0
 grow_horizontal = 2
 text = "SELECT A TARGET"
 label_settings = SubResource("LabelSettings_uw2cy")
+
+[node name="Cost" type="Label" parent="BattleUI/TargetingUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = 85.0
+offset_right = 20.0
+offset_bottom = 127.0
+grow_horizontal = 2
+text = "
+"
+label_settings = SubResource("LabelSettings_thch3")

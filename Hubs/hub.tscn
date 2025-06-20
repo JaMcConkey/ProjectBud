@@ -102,5 +102,5 @@ step = 1.0
 fill_mode = 2
 show_percentage = false
 
-[connection signal="mouse_entered" from="HubCollider" to="." method="_on_area_2d_mouse_entered"]
-[connection signal="mouse_exited" from="HubCollider" to="." method="_on_area_2d_mouse_exited"]
+[connection signal="mouse_entered" from="HubCollider" to="." method="_on_hub_collider_mouse_entered"]
+[connection signal="mouse_exited" from="HubCollider" to="." method="_on_hub_collider_mouse_exited"]

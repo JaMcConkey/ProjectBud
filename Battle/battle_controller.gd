@@ -7,6 +7,8 @@ class_name BattleController
 @export var action_manager : ActionManager
 @export var influence_Manager : InfluenceManager
 
+@export var targeting_UI : TargetingUI
+
 var game_context : GameContext
 var _cur_mode : STATE
 @export var teams : Array[Team]
@@ -45,6 +47,7 @@ func start_battle():
 
 func _targeting_started(action : GameAction, _requester_id : String):
 	_set_mode(STATE.TargetSelection)
+	targeting_UI.show_targeting_ui(action)
 	#NOTE Make sure to clear old action stuffs
 	#_clear_selection()
 	if action is HubAction:
@@ -69,6 +72,8 @@ func _action_ended(_action : GameAction):
 
 func _set_mode(state : STATE):
 	print("Changing mode to: ", STATE.keys()[state])
+	if _cur_mode == STATE.TargetSelection and state != STATE.TargetSelection:
+		targeting_UI.hide_targeting_ui()
 	if state == STATE.Idle:
 		_clear_selection()
 	_cur_mode = state
@@ -82,10 +87,6 @@ func _clear_selection():
 		hub.toggle_targetable_icon(false)
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed('test'):
-		var sender = hub_controller.get_all_hubs().pick_random()
-		var rec = hub_controller.get_all_hubs().pick_random()
-		influence_Manager.send_influence(sender, rec, 5)
 	# Escape to idle for now
 	if event.is_action_pressed("ui_cancel"):
 		if _cur_mode != STATE.Idle:
@@ -101,13 +102,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		_handle_left_click_up()
 	if event.is_action_pressed("ScrollDown"):
 		if selected_hub:
-			var active_comp = selected_hub.hub_ui.get_active_component()
+			var active_comp = selected_hub.get_active_component()
 			if active_comp != null:
 				active_comp.decrease()
 
 	if event.is_action_pressed("ScrollUp"):
 		if selected_hub:
-			var active_comp = selected_hub.hub_ui.get_active_component()
+			var active_comp = selected_hub.get_active_component()#hub_ui.get_active_component()
 			if active_comp != null:
 				active_comp.increase()
 func _handle_left_click_down():

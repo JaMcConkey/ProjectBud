@@ -32,9 +32,7 @@ func _setup_action():
 func set_cost(new_value):
 	cost = new_value
 	cost_updated.emit(cost)
-func can_start() -> bool:
-	"""Checks if an action can be started"""
-	return true
+
 func get_max_cost() -> int:
 	return _max_cost
 func get_cost() -> int:

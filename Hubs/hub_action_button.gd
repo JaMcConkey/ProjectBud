@@ -45,10 +45,11 @@ func update_display():
 		push_warning("No action assigned here, why is there a button")
 func _on_set_target_pressed():
 	hub_comp.start_targeting()
-	pass
+	update_display()
 func _on_clear_target_pressed():
 	hub_comp.clear_target()
-	pass
+	update_display()
+	
 func on_auto_fire_toggled(val : bool):
 	hub_comp.toggle_auto_fire(val)
 	pass
