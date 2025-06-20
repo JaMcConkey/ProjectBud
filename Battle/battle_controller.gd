@@ -48,12 +48,15 @@ func _targeting_started(action : GameAction, _requester_id : String):
 	#NOTE Make sure to clear old action stuffs
 	#_clear_selection()
 	if action is HubAction:
+		#Make sure no other nodes are selected for some reason
+		#NOTE select_node() should have already been called here on the hub,
+		#Will need to handle if it's not a player selected hub action later
 		for hub in hub_controller.get_all_hubs():
 			if hub == action.source_hub:
 				continue
 			hub.deselect_node()
 			hub.toggle_targetable_icon(false)
-		#action.source_hub.select_node()
+
 		selected_hub = action.source_hub
 		for hub in hub_controller.get_all_hubs():
 				hub.toggle_targetable_icon(action.is_valid_target(hub))
@@ -142,10 +145,11 @@ func _handle_target_selection_click():
 			break
 	
 	if clicked_hub:
-		action_manager.provide_target(clicked_hub)
-		_set_mode(STATE.Idle)
+		if action_manager.provide_target(clicked_hub):
+			_set_mode(STATE.Idle)
 	else:
-		action_manager.provide_target(get_viewport().get_mouse_position())
+		if action_manager.provide_target(get_viewport().get_mouse_position()):
+			_set_mode(STATE.Idle)
 
 func _handle_hub_selected_click():
 	var clicked_hub = null

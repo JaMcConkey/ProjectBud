@@ -40,12 +40,13 @@ func increase(step = 1):
 	"""
 	Will vary based on child, parent does nothing
 	"""
-	pass
+	component_updated.emit()
 func decrease(step = 1):
 	"""
 	Will vary based on child, parent does nothing
 	"""
-	pass
+	component_updated.emit()
+
 func get_cost() -> int:
 	"""
 	Returns the cost of the current active action

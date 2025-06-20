@@ -50,6 +50,8 @@ func increase(step = 1):
 	"""
 	_pending_cost += step
 	_pending_cost = clampi(_pending_cost,0,hub.max_influence)
+	component_updated.emit()
+
 
 func decrease(step = 1):
 	"""
@@ -57,6 +59,8 @@ func decrease(step = 1):
 	"""
 	_pending_cost -= step
 	_pending_cost = clampi(_pending_cost,0,hub.max_influence)
+	component_updated.emit()
+
 func ui_set_active(val : bool):
 	"""
 	Called by the ui to inform if active - Preset pending cost here

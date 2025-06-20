@@ -35,6 +35,8 @@ func execute() -> bool:
 
 func is_valid_target(target) -> bool:
 	if target is Hub:
+		if target == source_hub:
+			return false
 		if _inf_man.can_receive_influence(target):
 			return true
 	return false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://1hnlbgcut4qf"]
+[gd_scene load_steps=20 format=3 uid="uid://1hnlbgcut4qf"]
 
 [ext_resource type="Script" uid="uid://bt36l475x1t2q" path="res://Battle/battle_controller.gd" id="1_tgtdb"]
 [ext_resource type="Script" uid="uid://bu8bjng7hqwhs" path="res://team.gd" id="2_7dd3t"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://d3ea4vsf6fjhe" path="res://Battle/influence_manager.gd" id="8_ee7tm"]
 [ext_resource type="Script" uid="uid://ccoj4hs1wdamk" path="res://Battle/action_manager.gd" id="10_7dd3t"]
 [ext_resource type="PackedScene" uid="uid://fasff80qoufc" path="res://influence_blob.tscn" id="10_p74yl"]
+[ext_resource type="Script" uid="uid://ba06cth2oattc" path="res://targeting_ui.gd" id="16_uw2cy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_r7rot"]
 shader = ExtResource("3_b6xrl")
@@ -29,6 +30,9 @@ shader_parameter/bigStarAmount = 0.02
 
 [sub_resource type="LabelSettings" id="LabelSettings_jah81"]
 font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_uw2cy"]
+font_size = 42
 
 [node name="BattleController" type="Node" node_paths=PackedStringArray("battlefield", "hub_controller", "action_manager", "influence_Manager")]
 script = ExtResource("1_tgtdb")
@@ -88,6 +92,22 @@ script = ExtResource("10_7dd3t")
 
 [node name="TargetingUI" type="Control" parent="BattleUI"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("16_uw2cy")
+
+[node name="Label" type="Label" parent="BattleUI/TargetingUI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "SELECT A TARGET"
+label_settings = SubResource("LabelSettings_uw2cy")
