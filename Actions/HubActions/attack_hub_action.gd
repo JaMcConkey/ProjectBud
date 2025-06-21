@@ -1,10 +1,7 @@
 extends HubAction
-class_name AttackAction
+class_name SendAttackAction
 
-enum ATTACK_TYPE{
-	PROJECTILE,
-	BEAM
-}
+var _damage_amount : int
 
 func _init(source: Hub, attack_comp : AttackComponent):
 	super(source)
@@ -14,6 +11,4 @@ func _init(source: Hub, attack_comp : AttackComponent):
 		pass
 
 func execute() -> bool:
-	if not super.execute():
-		return false
-	return true
+	return super.execute()

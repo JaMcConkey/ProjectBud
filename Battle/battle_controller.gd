@@ -48,8 +48,6 @@ func start_battle():
 func _targeting_started(action : GameAction, _requester_id : String):
 	_set_mode(STATE.TargetSelection)
 	targeting_UI.show_targeting_ui(action)
-	#NOTE Make sure to clear old action stuffs
-	#_clear_selection()
 	if action is HubAction:
 		#Make sure no other nodes are selected for some reason
 		#NOTE select_node() should have already been called here on the hub,
